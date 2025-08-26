@@ -33,3 +33,17 @@ flowchart LR
   BlinkClient --> Tip
 ```
 
+## Features
+
+| Area | What it demonstrates |
+|------|-----------------------|
+| **Instant demo** | Home → “Try live demo” loads a busy mainnet signer with **no wallet connect** |
+| **Explorer mode** | `/dashboard?address=<pubkey>` read-only for any wallet or program-owned account |
+| **Dashboard** | Paginated signatures, parsed tx stats, heuristic “behavior hints” from program IDs |
+| **Mainnet RPC proxy** | Browser → `/api/solana-rpc` → `SOLANA_RPC_URL` (avoids public-RPC **403**) |
+| **Cluster toggle** | `mainnet-beta` vs `devnet`, persisted locally |
+| **Optional mint lookup** | `getParsedTokenAccountsByOwner` for a pasted mint pubkey |
+| **Solana Actions** | `GET/POST OPTIONS` `/api/actions/tip` (+ root [`/actions.json`](./src/app/actions.json/route.ts) for Blink discovery) |
+
+“Heuristic” labels (`swap-like`, etc.) infer intent from observed program IDs (e.g. Jupiter v6, SPL Token)—they are **not** audited classifications.
+
