@@ -70,3 +70,17 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Copy from [`.env.example`](.env.example).
 
+## Deploy on Vercel
+
+1. Import this repo in [Vercel](https://vercel.com/).
+2. Set **Production** variables: **`SOLANA_RPC_URL`** = your Helius / QuickNode mainnet HTTPS URL (required so mainnet demos work—public RPC blocks many browsers). Also set `NEXT_PUBLIC_APP_URL`. Optional: `TIP_RECIPIENT`.
+3. Redeploy. Framework preset: Next.js.
+
+## Blink / Actions testing
+
+- Discovery file: `{YOUR_ORIGIN}/actions.json`
+- Action endpoint: `{YOUR_ORIGIN}/api/actions/tip`
+- When `TIP_RECIPIENT` is unset, wallets still render metadata with a disabled state describing missing configuration.
+
+Official reference: [Actions and blinks — Solana](https://solana.com/developers/guides/advanced/actions).
+
