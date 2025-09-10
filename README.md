@@ -84,3 +84,16 @@ Copy from [`.env.example`](.env.example).
 
 Official reference: [Actions and blinks — Solana](https://solana.com/developers/guides/advanced/actions).
 
+## Security & disclaimer
+
+Insight cards use **only public chain data**. The tip Action asks you to sign a **`SystemProgram.transfer`** you authorize in your wallet. Review every transaction preview and never expose private keys.
+
+This project is demo software; Solana Labs / Foundation are unrelated.
+
+## Scripts
+
+```bash
+npm run dev       # Turbopack dev server
+npm run build     # Production build + typecheck
+npm run lint      # ESLint
+```
