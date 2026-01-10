@@ -139,3 +139,20 @@ export async function loadWalletInsights(
     newestFetchedSlot: maxSlot,
   };
 }
+
+export async function loadMintSnapshot(
+  connection: Connection,
+  owner: PublicKey,
+  mint: PublicKey,
+): Promise<{ amountUi: string; decimals: number } | null> {
+  const res = await connection.getParsedTokenAccountsByOwner(owner, {
+    mint,
+  });
+  if (!res.value.length) return null;
+  const first = res.value[0]!.account.data.parsed.info;
+  const tokenAmount = first.tokenAmount;
+  return {
+    amountUi: tokenAmount.uiAmountString ?? String(tokenAmount.uiAmount ?? 0),
+    decimals: tokenAmount.decimals,
+  };
+}
