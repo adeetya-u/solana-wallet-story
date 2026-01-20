@@ -2,8 +2,10 @@
 
 import {
   createContext,
+  startTransition,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -24,6 +26,19 @@ const ClusterContext = createContext<ClusterContextValue | null>(null);
 export function ClusterProvider({ children }: { children: React.ReactNode }) {
   const [cluster, setClusterState] = useState<SolanaCluster>("mainnet-beta");
 
+  useEffect(() => {
+    queueMicrotask(() => {
+      try {
+        const raw = localStorage.getItem(CLUSTER_STORAGE_KEY);
+        if (raw === "devnet" || raw === "mainnet-beta") {
+          startTransition(() => setClusterState(raw));
+        }
+      } catch {
+        /* ignore */
+      }
+    });
+  }, []);
+
   const setCluster = useCallback((c: SolanaCluster) => {
     setClusterState(c);
     try {
@@ -36,9 +51,23 @@ export function ClusterProvider({ children }: { children: React.ReactNode }) {
   const customMainnet =
     process.env.NEXT_PUBLIC_SOLANA_RPC_URL?.trim() || undefined;
 
+  const [browserOrigin, setBrowserOrigin] = useState<string | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      startTransition(() =>
+        setBrowserOrigin(
+          typeof window !== "undefined" ? window.location.origin : undefined,
+        ),
+      );
+    });
+  }, []);
+
   const endpoint = useMemo(
-    () => getEndpointForCluster(cluster, customMainnet, undefined),
-    [cluster, customMainnet],
+    () => getEndpointForCluster(cluster, customMainnet, browserOrigin),
+    [cluster, customMainnet, browserOrigin],
   );
 
   const value = useMemo(
