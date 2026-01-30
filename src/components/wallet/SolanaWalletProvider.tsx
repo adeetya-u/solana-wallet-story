@@ -1,17 +1,32 @@
 "use client";
 
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import {
+  PhantomWalletAdapter,
+  SolflareWalletAdapter,
+} from "@solana/wallet-adapter-wallets";
 import { useMemo } from "react";
 import { ClusterProvider, useCluster } from "@/components/wallet/ClusterContext";
 
 import "@solana/wallet-adapter-react-ui/styles.css";
 
 function WalletInner({ children }: { children: React.ReactNode }) {
-  const { endpoint } = useCluster();
+  const { cluster, endpoint } = useCluster();
 
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
+  const wallets = useMemo(
+    () => [
+      new PhantomWalletAdapter(),
+      new SolflareWalletAdapter({
+        network:
+          cluster === "devnet"
+            ? WalletAdapterNetwork.Devnet
+            : WalletAdapterNetwork.Mainnet,
+      }),
+    ],
+    [cluster],
+  );
 
   return (
     <ConnectionProvider
