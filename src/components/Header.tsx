@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { ClusterToggle } from "@/components/ClusterToggle";
 
 export function Header() {
   return (
@@ -13,7 +14,21 @@ export function Header() {
         >
           Solpeek
         </Link>
-        <WalletMultiButton className="!bg-violet-600 hover:!bg-violet-700" />
+        <div className="flex flex-wrap items-center justify-end gap-3">
+          <nav className="flex items-center gap-4 text-sm text-zinc-600 dark:text-zinc-400">
+            <Link href="/" className="hover:text-zinc-900 dark:hover:text-zinc-200">
+              Home
+            </Link>
+            <Link
+              href="/dashboard"
+              className="hover:text-zinc-900 dark:hover:text-zinc-200"
+            >
+              Dashboard
+            </Link>
+          </nav>
+          <ClusterToggle />
+          <WalletMultiButton className="!bg-violet-600 hover:!bg-violet-700" />
+        </div>
       </div>
     </header>
   );
