@@ -19,3 +19,18 @@ export default function Home() {
         </p>
       </div>
 
+      <div className="flex flex-wrap gap-3">
+        <Link
+          href={demoHref}
+          className="rounded-full bg-violet-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-violet-700"
+        >
+          Try live demo
+        </Link>
+        <Link
+          href="/dashboard"
+          className="rounded-full border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 transition hover:border-zinc-400 hover:bg-white dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-900"
+        >
+          Use my wallet
+        </Link>
+      </div>
+
