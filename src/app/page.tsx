@@ -34,3 +34,31 @@ export default function Home() {
         </Link>
       </div>
 
+      <section className="rounded-2xl border border-zinc-200 bg-zinc-50/90 p-5 text-sm text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100">
+        <p className="font-medium text-zinc-900 dark:text-zinc-50">Read-only</p>
+        <p className="mt-2 leading-relaxed text-zinc-600 dark:text-zinc-400">
+          Solpeek pulls public ledger data via RPC—it never asks for your seed phrase.
+          Insights cover a capped window of the newest activity, not full history.
+        </p>
+      </section>
+
+      <section className="grid gap-6 rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950 sm:grid-cols-2">
+        <div>
+          <h2 className="font-semibold text-zinc-900 dark:text-zinc-50">Scope</h2>
+          <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            Labels such as swap-like references are heuristics based on observed program
+            IDs—use an indexer-backed product when you need production-grade tagging.
+          </p>
+        </div>
+        <div>
+          <h2 className="font-semibold text-zinc-900 dark:text-zinc-50">Built with</h2>
+          <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+            <li>Next.js on Vercel</li>
+            <li>Wallet adapter + Solana web3 reads</li>
+            <li>Optional Solana Actions tip</li>
+          </ul>
+        </div>
+      </section>
+    </main>
+  );
+}
