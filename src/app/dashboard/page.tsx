@@ -318,6 +318,34 @@ function DashboardInner() {
             </ul>
           </div>
 
+          <div className="rounded-2xl border border-dashed border-zinc-300 p-5 dark:border-zinc-700">
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              SPL mint snapshot
+            </h3>
+            <p className="mt-1 text-xs text-zinc-500">
+              Paste a mint—for the pubkey above on this cluster.
+            </p>
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <input
+                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
+                placeholder="Mint address"
+                value={mintInput}
+                onChange={(e) => setMintInput(e.target.value)}
+              />
+              <button
+                type="button"
+                className="rounded-lg bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
+                onClick={() => void tryMintSnap()}
+              >
+                Lookup
+              </button>
+            </div>
+            {mintResult && (
+              <p className="mt-3 font-mono text-sm text-zinc-700 dark:text-zinc-300">
+                {mintResult}
+              </p>
+            )}
+          </div>
         </div>
       )}
     </main>
