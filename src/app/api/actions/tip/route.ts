@@ -68,9 +68,75 @@ export async function GET(req: Request) {
   );
 }
 
-export async function POST() {
-  return Response.json(
-    { message: "Tip handler not wired yet" },
-    { status: 501 },
+export async function POST(req: Request) {
+  const url = new URL(req.url);
+  const amount = Number(url.searchParams.get("amount") ?? "0.01");
+  const recipientStr = process.env.TIP_RECIPIENT?.trim();
+
+  if (!recipientStr) {
+    return Response.json(
+      { message: "Tip recipient not configured" },
+      { status: 400, headers: ACTIONS_CORS_HEADERS },
+    );
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0 || amount > 100) {
+    return Response.json(
+      { message: "Invalid tip amount" },
+      { status: 400, headers: ACTIONS_CORS_HEADERS },
+    );
+  }
+
+  let parsed: ActionPostBody;
+  try {
+    parsed = (await req.json()) as ActionPostBody;
+  } catch {
+    return Response.json(
+      { message: "Invalid JSON body" },
+      { status: 400, headers: ACTIONS_CORS_HEADERS },
+    );
+  }
+
+  if (!parsed.account) {
+    return Response.json(
+      { message: "Missing signing account" },
+      { status: 400, headers: ACTIONS_CORS_HEADERS },
+    );
+  }
+
+  let payer: PublicKey;
+  let receiver: PublicKey;
+  try {
+    payer = new PublicKey(parsed.account);
+    receiver = new PublicKey(recipientStr);
+  } catch {
+    return Response.json(
+      { message: "Invalid pubkey" },
+      { status: 400, headers: ACTIONS_CORS_HEADERS },
+    );
+  }
+
+  const lamports = Math.round(amount * LAMPORTS_PER_SOL);
+
+  const transaction = new Transaction().add(
+    SystemProgram.transfer({
+      fromPubkey: payer,
+      toPubkey: receiver,
+      lamports,
+    }),
   );
+
+  const response = await createPostResponse({
+    fields: {
+      type: "transaction",
+      transaction,
+      message: `Tip ${amount} SOL. Thank you.`,
+    },
+  });
+
+  return Response.json(response, { headers: ACTIONS_CORS_HEADERS });
+}
+
+interface ActionPostBody {
+  account: string;
 }
