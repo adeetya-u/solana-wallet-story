@@ -2,6 +2,10 @@
   "name": "solpeek",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adeetya-u/solana-wallet-story.git"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

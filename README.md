@@ -6,7 +6,7 @@ Production is wired to the Vercel project **`solpeek-live`** (Next.js on this re
 
 **JSON-RPC `403` in the browser:** set **`SOLANA_RPC_URL`** (Helius / QuickNode mainnet HTTPS) on Vercel so **`/api/solana-rpc`** can relay from the server; then redeploy.
 
-On Vercel → **solpeek-live** → **Environment Variables**, set **`NEXT_PUBLIC_APP_URL`** to **`https://solpeek-live.vercel.app`** (Actions metadata), copy **`SOLANA_RPC_URL`** and any optional vars from the old **`solpeek`** project if needed, then **Redeploy**.
+On Vercel → **solpeek-live** → **Environment Variables**, set **`NEXT_PUBLIC_APP_URL`** to **`https://solpeek-live.vercel.app`** (Actions metadata), **`SOLANA_RPC_URL`**, and any optional vars (then **Redeploy**).
 
 If Production looks gated or stale, open **solpeek-live** → **Deployments** → confirm the latest build is promoted and review **Deployment Protection**.
 
@@ -76,9 +76,9 @@ Copy from [`.env.example`](.env.example).
 
 ## Deploy on Vercel
 
-1. Import this repo in [Vercel](https://vercel.com/).
-2. Set **Production** variables: **`SOLANA_RPC_URL`** = your Helius / QuickNode mainnet HTTPS URL (required so mainnet demos work—public RPC blocks many browsers). Also set `NEXT_PUBLIC_APP_URL`. Optional: `TIP_RECIPIENT`.
-3. Redeploy. Framework preset: Next.js.
+1. Link **Git**: connect repository [**adeetya-u/solana-wallet-story**](https://github.com/adeetya-u/solana-wallet-story), **Production branch** `main`, **Root Directory** `.` (repo root). Use—or create—a project named **`solpeek-live`** if you want the same hostname convention.
+2. Set **Production** variables: **`SOLANA_RPC_URL`** = your Helius / QuickNode mainnet HTTPS URL (required so mainnet demos work—public RPC blocks many browsers). Also set **`NEXT_PUBLIC_APP_URL=https://solpeek-live.vercel.app`** (or your deployed origin). Optional: **`TIP_RECIPIENT`**.
+3. Redeploy. Framework preset: Next.js (`vercel.json` already pins install/build).
 
 ## Blink / Actions testing
 
