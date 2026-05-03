@@ -17,7 +17,7 @@ import {
   InsightsPanel,
   InsightsPanelSkeleton,
 } from "@/components/dashboard/InsightsPanel";
-import { DEMO_WALLET_MAINNET, demoDashboardHref } from "@/lib/solana/demo";
+import { DEMO_WALLETS, DEMO_WALLET_MAINNET, demoDashboardHref } from "@/lib/solana/demo";
 import { MAX_SIGNATURES } from "@/lib/solana/fetch";
 import {
   loadMintSnapshot,
@@ -192,12 +192,15 @@ function DashboardInner() {
         </p>
 
         <div className="flex flex-wrap gap-3">
-          <Link
-            href={demoDashboardHref()}
-            className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-[var(--accent-hover)]"
-          >
-            Demo wallet
-          </Link>
+          {DEMO_WALLETS.map((d) => (
+            <Link
+              key={d.id}
+              href={demoDashboardHref(d.id)}
+              className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-[var(--accent-hover)]"
+            >
+              {d.label}
+            </Link>
+          ))}
           <Link
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-[var(--surface)] px-5 py-2.5 text-[14px] font-semibold text-slate-900 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900"

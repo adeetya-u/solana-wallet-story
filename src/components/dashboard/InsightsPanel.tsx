@@ -9,7 +9,7 @@ import {
   Vote,
   type LucideIcon,
 } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { WalletInsights } from "@/lib/solana/insights";
 import { MAX_SIGNATURES } from "@/lib/solana/fetch";
 import { buildBehaviorFingerprint } from "@/lib/fingerprint/behavior";
@@ -18,6 +18,7 @@ import {
   loadSnapshot,
   saveSnapshot,
 } from "@/lib/fingerprint/snapshot";
+import { getTrainedModel, matchCluster } from "@/lib/fingerprint/trained";
 
 const BAR_PALETTE = [
   "bg-gradient-to-r from-emerald-600 to-green-400",
@@ -97,6 +98,24 @@ export function InsightsPanel({
     () => buildBehaviorFingerprint(insights),
     [insights],
   );
+
+  const [clusterMatch, setClusterMatch] = useState<ReturnType<typeof matchCluster> | null>(null);
+
+  useEffect(() => {
+    let alive = true;
+    void (async () => {
+      const model = await getTrainedModel();
+      if (!alive) return;
+      if (!model) {
+        setClusterMatch(null);
+        return;
+      }
+      setClusterMatch(matchCluster(insights, model));
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [insights]);
 
   const previous = useMemo(() => {
     if (!address || !cluster) return null;
@@ -187,6 +206,11 @@ export function InsightsPanel({
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
           Fingerprint
         </p>
+        {clusterMatch ? (
+          <p className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
+            Similarity: closest to cluster {clusterMatch.clusterIndex + 1} (score {clusterMatch.percentile}/100).
+          </p>
+        ) : null}
         <p className="mt-2 text-[15px] font-semibold tracking-tight text-slate-900 dark:text-slate-50">
           {fingerprint.headline}
         </p>

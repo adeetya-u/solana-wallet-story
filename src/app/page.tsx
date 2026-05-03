@@ -6,7 +6,7 @@ import {
   Link2,
   type LucideIcon,
 } from "lucide-react";
-import { demoDashboardHref } from "@/lib/solana/demo";
+import { DEMO_WALLETS, demoDashboardHref } from "@/lib/solana/demo";
 
 function FeatureCard({
   icon: Icon,
@@ -42,7 +42,7 @@ export default function Home() {
           Read-only Solana address summaries.
         </h1>
         <p className="max-w-lg text-[17px] leading-relaxed text-[var(--muted)]">
-          Paste an address. Get a quick summary of recent on-chain activity.
+          Instead of scrolling a block explorer, get a short, consistent snapshot you can read in seconds.
         </p>
       </div>
 
@@ -61,21 +61,44 @@ export default function Home() {
         </Link>
       </div>
 
+      <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-5">
+        <p className="text-[13px] font-semibold text-[var(--foreground)]">
+          Demo addresses
+        </p>
+        <p className="mt-1 text-[13px] text-[var(--muted)]">
+          Click to open a labeled example.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {DEMO_WALLETS.map((d) => (
+            <Link
+              key={d.id}
+              href={demoDashboardHref(d.id)}
+              className="inline-flex items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-[13px] font-semibold text-[var(--foreground)] transition hover:bg-[var(--accent-muted)]"
+            >
+              {d.label}
+            </Link>
+          ))}
+        </div>
+        <p className="mt-3 text-[12px] text-[var(--muted)]">
+          Labels are best-effort. On-chain activity changes over time.
+        </p>
+      </section>
+
       <div className="grid gap-4 md:grid-cols-3">
         <FeatureCard
           icon={BarChart3}
-          title="Program rollups"
-          body="A quick breakdown of what this address touched recently."
+          title="Faster than an explorer"
+          body="One screen that highlights the main programs and activity patterns in the recent window."
         />
         <FeatureCard
           icon={Link2}
-          title="Shareable URLs"
-          body="Open the same view later with a link."
+          title="Easy to share"
+          body="Send a link and anyone can see the same read-only view for that address."
         />
         <FeatureCard
           icon={ShieldCheck}
-          title="Custody-neutral"
-          body="Read-only. No seed phrase. No custody."
+          title="Safe by design"
+          body="Read-only. No seed phrase prompts. No custody."
         />
       </div>
 
@@ -83,9 +106,9 @@ export default function Home() {
         <div className="flex items-start gap-3">
           <Cpu className="mt-0.5 size-5 shrink-0 text-[var(--accent)]" strokeWidth={2} aria-hidden />
           <div>
-            <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Run it yourself</h2>
+            <h2 className="text-[15px] font-semibold text-[var(--foreground)]">For teams</h2>
             <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[var(--muted)]">
-              MIT licensed. Host it and point it at your RPC.
+              MIT licensed. Host it and point it at your RPC. Use it as a lightweight first screen before deeper review.
             </p>
           </div>
         </div>

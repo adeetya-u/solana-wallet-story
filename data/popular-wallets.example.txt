@@ -1,0 +1,14 @@
+# Put one Solana address per line (base58).
+# This file is used by scripts/train-fingerprint-model.ts
+#
+# You can include:
+# - Exchange hot wallets
+# - Market maker / router addresses
+# - NFT mints / marketplaces
+# - Your own curated "popular" set
+#
+# Keep it to ~200 lines for a fast training run.
+7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU
+TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA
+metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s
+
