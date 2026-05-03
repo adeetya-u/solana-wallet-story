@@ -12,25 +12,25 @@ export type DemoWallet = {
  */
 export const DEMO_WALLETS: DemoWallet[] = [
   {
-    id: "raydium",
-    label: "Raydium (program)",
-    cluster: "mainnet-beta",
-    address: "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
-    note: "Usually busy; good for charts",
-  },
-  {
-    id: "spl-token",
-    label: "SPL Token (program)",
-    cluster: "mainnet-beta",
-    address: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
-    note: "Core token program",
-  },
-  {
     id: "metaplex-metadata",
     label: "Metaplex Metadata (program)",
     cluster: "mainnet-beta",
     address: "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
     note: "NFT metadata program",
+  },
+  {
+    id: "jupiter-v6",
+    label: "Jupiter v6 (program)",
+    cluster: "mainnet-beta",
+    address: "JUP6LkbZbjS1jKKwapdHNQyWFNwNmkEsJBAp4551652",
+    note: "Swap routing program",
+  },
+  {
+    id: "whale-1",
+    label: "High-balance wallet (address)",
+    cluster: "mainnet-beta",
+    address: "MJKqp326RZCHnAAbew9MDdui3iCKWco7fsK9sVuZTX2",
+    note: "Real wallet activity varies",
   },
 ];
 
