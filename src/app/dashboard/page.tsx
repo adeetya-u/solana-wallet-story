@@ -13,12 +13,15 @@ import {
 } from "react";
 import { PublicKey } from "@solana/web3.js";
 import { useCluster } from "@/components/wallet/ClusterContext";
-import { InsightsPanel } from "@/components/dashboard/InsightsPanel";
+import {
+  InsightsPanel,
+  InsightsPanelSkeleton,
+} from "@/components/dashboard/InsightsPanel";
 import { DEMO_WALLET_MAINNET, demoDashboardHref } from "@/lib/solana/demo";
 import { MAX_SIGNATURES } from "@/lib/solana/fetch";
 import {
   loadMintSnapshot,
-  loadWalletInsights,
+  loadWalletInsightsProgressive,
   type WalletInsights,
 } from "@/lib/solana/insights";
 
@@ -63,6 +66,9 @@ function DashboardInner() {
   const [insights, setInsights] = useState<WalletInsights | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [signaturePreviewCount, setSignaturePreviewCount] = useState<number | null>(
+    null,
+  );
 
   /** Drop stale resolves when deps change mid-flight or React Strict Mode double-invokes effects. */
   const insightsGenerationRef = useRef(0);
@@ -77,11 +83,21 @@ function DashboardInner() {
     setLoading(true);
     setError(null);
     setInsights(null);
+    setSignaturePreviewCount(null);
     try {
-      const data = await loadWalletInsights(connection, targetKey);
+      await loadWalletInsightsProgressive(connection, targetKey, {
+        onSignatures: (count) => {
+          if (insightsGenerationRef.current !== generation) return;
+          setSignaturePreviewCount(count);
+        },
+        onUpdate: (data, _complete) => {
+          if (insightsGenerationRef.current !== generation) return;
+          setInsights(data);
+          setError(null);
+        },
+        shouldAbort: () => insightsGenerationRef.current !== generation,
+      });
       if (insightsGenerationRef.current !== generation) return;
-      setInsights(data);
-      setError(null);
     } catch (e) {
       if (insightsGenerationRef.current !== generation) return;
       let msg =
@@ -223,7 +239,7 @@ function DashboardInner() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-10 px-4 py-14 sm:px-6 lg:gap-12 lg:py-16">
+    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-4 py-14 sm:px-6 lg:gap-12 lg:py-16">
       {explorerMode ? (
         <div className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-50">
           <span className="font-medium">Live read-only view</span> · inspecting{" "}
@@ -257,6 +273,12 @@ function DashboardInner() {
             >
               {loading ? "Refreshing…" : "Refresh"}
             </button>
+            <a
+              href="#solpeek-visualization"
+              className="rounded-full border border-violet-300 bg-violet-50 px-4 py-2 text-sm font-medium text-violet-800 hover:bg-violet-100 dark:border-violet-700 dark:bg-violet-950/50 dark:text-violet-200 dark:hover:bg-violet-950"
+            >
+              Jump to charts
+            </a>
             {explorerMode && (
               <Link
                 href="/dashboard"
@@ -276,16 +298,22 @@ function DashboardInner() {
         </div>
       )}
 
-      {loading && (
+      {loading && !insights && (
         <p className="text-sm text-zinc-600 dark:text-zinc-300">
-          Gathering up to<strong className="mx-1 text-violet-600 dark:text-violet-400">{MAX_SIGNATURES}</strong>
-          freshest public moves to paint charts—usually a handful of seconds.
+          Pulling up to{" "}
+          <strong className="text-violet-600 dark:text-violet-400">{MAX_SIGNATURES}</strong>{" "}
+          recent public moves—colored bars appear below as soon as the first batch decodes (scroll
+          if you’re on a small screen).
         </p>
       )}
 
-      {insights && !loading && (
+      {loading && !insights && (
+        <InsightsPanelSkeleton signatureTargetHint={signaturePreviewCount} />
+      )}
+
+      {insights && (
         <div className="grid gap-8">
-          <InsightsPanel insights={insights} />
+          <InsightsPanel insights={insights} streaming={loading} />
 
           <div className="rounded-3xl border-2 border-dashed border-teal-200 bg-gradient-to-r from-teal-50 to-cyan-50 p-6 dark:border-teal-800 dark:from-teal-950/40 dark:to-cyan-950/30">
             <h3 className="text-lg font-semibold text-teal-900 dark:text-teal-50">

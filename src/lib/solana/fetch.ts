@@ -2,13 +2,13 @@ import type { ConfirmedSignatureInfo, ParsedTransactionWithMeta } from "@solana/
 import { Connection, PublicKey } from "@solana/web3.js";
 import { sleep } from "@/lib/solana/delay";
 
-/** Hard cap: smaller window = faster loads on free RPC tiers (parallel single calls, not batch RPC). */
-export const MAX_SIGNATURES = 48;
+/** Hard cap: tuned for sub-~10s completes on typical free RPC; visuals stream in sooner. */
+export const MAX_SIGNATURES = 24;
 
 const PAGE_SIZE = 24;
 
 /** Pace signature pagination — many upstreams throttle `getSignaturesForAddress`. */
-const SIGNATURE_PAGE_GAP_MS = 40;
+const SIGNATURE_PAGE_GAP_MS = 22;
 
 /**
  * Paginate `getSignaturesForAddress` until `max` signatures or exhaustion.
@@ -34,16 +34,18 @@ export async function fetchRecentSignatures(
   return all;
 }
 
-const PARSED_TX_CONFIG = { maxSupportedTransactionVersion: 0 as const };
+export const PARSED_TX_CONFIG = {
+  maxSupportedTransactionVersion: 0 as const,
+};
 
 /**
  * Concurrent single-RPC `getTransaction` (parsed) — each POST is one JSON-RPC object, not an
  * array batch (`_rpcBatchRequest`), so Helius free and similar gateways accept it while we keep latency down.
  */
-const PARSED_FETCH_CONCURRENCY = 8;
+export const PARSED_FETCH_CONCURRENCY = 10;
 
 /** Short pause between parallel waves so RPM quotas are less likely to trip. */
-const PARSED_FETCH_WAVE_GAP_MS = 55;
+export const PARSED_FETCH_WAVE_GAP_MS = 22;
 
 export async function fetchParsedTransactionsConcurrent(
   connection: Connection,

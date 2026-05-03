@@ -11,10 +11,14 @@ import {
   TOKEN_2022_PROGRAM,
   VOTE_PROGRAM,
 } from "@/lib/solana/constants";
+import { sleep } from "@/lib/solana/delay";
 import {
   fetchParsedTransactionsConcurrent,
   fetchRecentSignatures,
   MAX_SIGNATURES,
+  PARSED_FETCH_CONCURRENCY,
+  PARSED_FETCH_WAVE_GAP_MS,
+  PARSED_TX_CONFIG,
 } from "@/lib/solana/fetch";
 
 export interface WalletInsights {
@@ -73,14 +77,10 @@ function categorizeProgramSet(ids: Set<string>): WalletInsights["buckets"] {
   return { swapLike, splTokenLike, metadataLike, voteLike, memoLike };
 }
 
-export async function loadWalletInsights(
-  connection: Connection,
-  pubkey: PublicKey,
-): Promise<WalletInsights> {
-  const signatures = await fetchRecentSignatures(connection, pubkey);
-  const sigStrings = signatures.map((s) => s.signature).filter(Boolean);
-  const txs = await fetchParsedTransactionsConcurrent(connection, sigStrings);
-
+export function buildWalletInsights(
+  sigStrings: string[],
+  txs: ParsedTransactionWithMeta[],
+): WalletInsights {
   const programCounts = new Map<string, number>();
   const bucketsAgg = {
     swapLike: 0,
@@ -138,6 +138,62 @@ export async function loadWalletInsights(
     oldestFetchedSlot: minSlot,
     newestFetchedSlot: maxSlot,
   };
+}
+
+export async function loadWalletInsights(
+  connection: Connection,
+  pubkey: PublicKey,
+): Promise<WalletInsights> {
+  const signatures = await fetchRecentSignatures(connection, pubkey);
+  const sigStrings = signatures.map((s) => s.signature).filter(Boolean);
+  const txs = await fetchParsedTransactionsConcurrent(connection, sigStrings);
+  return buildWalletInsights(sigStrings, txs);
+}
+
+/** Decode transactions in waves so the UI can paint charts before the full window finishes. */
+export async function loadWalletInsightsProgressive(
+  connection: Connection,
+  pubkey: PublicKey,
+  opts: {
+    onSignatures: (count: number) => void;
+    onUpdate: (data: WalletInsights, complete: boolean) => void;
+    shouldAbort: () => boolean;
+  },
+): Promise<void> {
+  const signatures = await fetchRecentSignatures(connection, pubkey);
+  if (opts.shouldAbort()) return;
+
+  const sigStrings = signatures.map((s) => s.signature).filter(Boolean);
+  opts.onSignatures(sigStrings.length);
+
+  if (sigStrings.length === 0) {
+    opts.onUpdate(buildWalletInsights([], []), true);
+    return;
+  }
+
+  const txs: ParsedTransactionWithMeta[] = [];
+  for (
+    let base = 0;
+    base < sigStrings.length;
+    base += PARSED_FETCH_CONCURRENCY
+  ) {
+    if (opts.shouldAbort()) return;
+    if (base > 0) await sleep(PARSED_FETCH_WAVE_GAP_MS);
+    if (opts.shouldAbort()) return;
+
+    const slice = sigStrings.slice(base, base + PARSED_FETCH_CONCURRENCY);
+    const wave = await Promise.all(
+      slice.map((sig) =>
+        connection.getParsedTransaction(sig, PARSED_TX_CONFIG),
+      ),
+    );
+    for (const t of wave) if (t !== null) txs.push(t);
+
+    const complete =
+      base + PARSED_FETCH_CONCURRENCY >= sigStrings.length;
+    opts.onUpdate(buildWalletInsights(sigStrings, txs), complete);
+    if (opts.shouldAbort()) return;
+  }
 }
 
 export async function loadMintSnapshot(

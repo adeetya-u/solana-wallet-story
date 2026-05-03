@@ -30,7 +30,7 @@ Traders/devs inherit the same surface for quick counterpart skims—just without
 
 ## Architecture
 
-Mainnet reads go to **`/api/solana-rpc`** (same origin), which forwards to **`SOLANA_RPC_URL`** on the server so keys stay off the client and public-RPC **403** from browsers is avoided. Devnet still uses the public devnet cluster URL. Wallet Adapter uses `@solana/web3.js` (`ConnectionProvider`). There is **no indexer**: the UI caps history (default **48** newest signatures) and loads parsed `getTransaction` calls as **parallel single-RPC requests** (not JSON-RPC batch arrays), which stays compatible with free RPC tiers that disallow batching.
+Mainnet reads go to **`/api/solana-rpc`** (same origin), which forwards to **`SOLANA_RPC_URL`** on the server so keys stay off the client and public-RPC **403** from browsers is avoided. Devnet still uses the public devnet cluster URL. Wallet Adapter uses `@solana/web3.js` (`ConnectionProvider`). There is **no indexer**: the UI caps history (default **24** newest signatures), streams parsed moves in waves into the charts, and issues **parallel single-RPC requests** (not JSON-RPC batch arrays)—compatible with free RPC tiers that disallow batching.
 
 ```mermaid
 flowchart LR

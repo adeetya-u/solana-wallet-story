@@ -9,10 +9,65 @@ const BAR_PALETTE = [
   "bg-gradient-to-r from-rose-500 to-pink-500",
 ];
 
-type Props = { insights: WalletInsights };
+type Props = {
+  insights: WalletInsights;
+  /** More ledger rows still decoding */
+  streaming?: boolean;
+};
+
+/** Skeleton layout so the visualization region is visible while RPC warms up. */
+export function InsightsPanelSkeleton({
+  signatureTargetHint,
+}: {
+  /** When known, shown under the title (e.g. “Found 24 actions to chart”). */
+  signatureTargetHint: number | null;
+}) {
+  return (
+    <div
+      id="solpeek-visualization"
+      className="scroll-mt-28 space-y-6"
+      aria-busy="true"
+      aria-label="Loading visualization"
+    >
+      <header className="flex flex-wrap items-end justify-between gap-3 border-b border-violet-200/80 pb-4 dark:border-violet-900/70">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">
+            Visualization
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-zinc-900 dark:text-white">
+            Your charts appear here—seconds, not silence
+          </h2>
+          <p className="mt-2 max-w-xl text-sm text-zinc-600 dark:text-zinc-400">
+            {signatureTargetHint !== null ? (
+              <>
+                Locked onto{" "}
+                <strong className="text-violet-700 dark:text-violet-300">
+                  {signatureTargetHint}
+                </strong>{" "}
+                recent ledger actions—painting colored bars once each move is decoded.
+              </>
+            ) : (
+              <>Finding recent public actions for this wallet, then fetching chart data…</>
+            )}
+          </p>
+        </div>
+      </header>
+      <div className="grid gap-4 sm:grid-cols-3">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="h-32 animate-pulse rounded-3xl bg-gradient-to-br from-zinc-200 to-zinc-100 dark:from-zinc-800 dark:to-zinc-900"
+          />
+        ))}
+      </div>
+      <div className="h-72 animate-pulse rounded-3xl bg-gradient-to-r from-violet-100/70 via-fuchsia-100/50 to-cyan-100/70 dark:from-violet-950/40 dark:via-zinc-900 dark:to-cyan-950/30" />
+      <div className="h-48 animate-pulse rounded-3xl bg-zinc-200/70 dark:bg-zinc-800" />
+    </div>
+  );
+}
 
 /** Plain-language charts for the bounded wallet synopsis. */
-export function InsightsPanel({ insights }: Props) {
+export function InsightsPanel({ insights, streaming = false }: Props) {
   const totalAttempts = insights.successfulTransactions + insights.failedTransactions;
   const okPct =
     totalAttempts === 0
@@ -64,12 +119,28 @@ export function InsightsPanel({ insights }: Props) {
   );
 
   return (
-    <div className="grid gap-8">
+    <div
+      id="solpeek-visualization"
+      className="grid gap-8 scroll-mt-28"
+    >
+      <header className="flex flex-wrap items-start justify-between gap-4 border-b border-violet-200/70 pb-4 dark:border-violet-900/60">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">
+            Visualization
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white">
+            At-a-glance story
+          </h2>
+        </div>
+        {streaming && (
+          <div className="rounded-full bg-amber-100 px-4 py-2 text-xs font-semibold text-amber-950 shadow-sm ring-1 ring-amber-300 dark:bg-amber-950/50 dark:text-amber-100 dark:ring-amber-800">
+            Live fill · decoded {insights.fetchedTransactions}/{insights.fetchedSignatures}
+          </div>
+        )}
+      </header>
+
       <div className="rounded-3xl border-2 border-violet-300/70 bg-gradient-to-br from-violet-50 via-white to-fuchsia-50 p-6 shadow-lg shadow-violet-500/10 dark:border-violet-700/60 dark:from-violet-950/50 dark:via-zinc-950 dark:to-fuchsia-950/30">
-        <p className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
-          At-a-glance story
-        </p>
-        <p className="mt-3 max-w-2xl text-pretty text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+        <p className="max-w-2xl text-pretty text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
           We skim the&nbsp;
           <strong className="text-violet-700 dark:text-violet-300">
             newest {insights.fetchedSignatures} public actions
@@ -204,6 +275,13 @@ export function InsightsPanel({ insights }: Props) {
           touched in sampled moves—not people or companies—just on-chain routines.
         </p>
         <ul className="mt-6 space-y-4">
+          {insights.topPrograms.length === 0 && (
+            <li className="rounded-xl bg-zinc-50 px-4 py-6 text-center text-sm text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400">
+              {streaming
+                ? "Program leaderboard fills in while we decode more moves…"
+                : "No program touches in decoded moves yet."}
+            </li>
+          )}
           {insights.topPrograms.map((row, idx) => {
             const frac = `${Math.round((100 * row.count) / maxProgramHits)}%`;
             const tint = PROGRAM_ROW_TINTS[idx % PROGRAM_ROW_TINTS.length];
