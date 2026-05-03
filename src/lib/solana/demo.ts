@@ -22,7 +22,7 @@ export const DEMO_WALLETS: DemoWallet[] = [
     id: "jupiter-v6",
     label: "Jupiter v6 (program)",
     cluster: "mainnet-beta",
-    address: "JUP6LkbZbjS1jKKwapdHNQyWFNwNmkEsJBAp4551652",
+    address: "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
     note: "Swap routing program",
   },
   {

@@ -107,6 +107,10 @@ export function InsightsPanel({
   useEffect(() => {
     let alive = true;
     void (async () => {
+      if (insights.fetchedTransactions <= 0) {
+        setClusterMatch(null);
+        return;
+      }
       const model = await getTrainedModel();
       if (!alive) return;
       if (!model) {
@@ -133,6 +137,9 @@ export function InsightsPanel({
   useEffect(() => {
     if (!address || !cluster) return;
     if (!complete) return;
+    // Avoid overwriting a good baseline with an "empty parse" run.
+    // Some RPCs return null parsed transactions even when signatures exist.
+    if (insights.fetchedSignatures > 0 && insights.fetchedTransactions === 0) return;
     saveSnapshot(address, cluster, insights);
   }, [address, cluster, complete, insights]);
 
@@ -220,6 +227,11 @@ export function InsightsPanel({
         <p className="mt-1 text-[13px] text-slate-600 dark:text-slate-400">
           {fingerprint.details}
         </p>
+        {insights.fetchedSignatures > 0 && insights.fetchedTransactions === 0 ? (
+          <p className="mt-3 text-[13px] text-slate-600 dark:text-slate-400">
+            No parsed transactions were returned for this window. Try Refresh, or switch RPC.
+          </p>
+        ) : null}
         <ul className="mt-4 space-y-2">
           {fingerprint.tags.slice(0, 3).map((t) => (
             <li key={t.id} className="flex gap-3">
@@ -293,7 +305,11 @@ export function InsightsPanel({
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
             What changed
           </p>
-          {!previous ? (
+          {insights.fetchedSignatures > 0 && insights.fetchedTransactions === 0 ? (
+            <p className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
+              Skipping comparison because no parsed transactions were returned in the current run.
+            </p>
+          ) : !previous ? (
             <p className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
               No prior snapshot on this device for this address and cluster.
             </p>
