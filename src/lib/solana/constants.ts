@@ -10,7 +10,7 @@ export const METAPLEX_METADATA_IDS = new Set<string>([
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s",
 ]);
 
-/** Jupiter v6 aggregator program — verified base58 decode in @solana/web3.js */
+/** Jupiter v6 aggregator program (verified base58 decode in @solana/web3.js). */
 export const JUPITER_V6_PROGRAM = "JUP6LkbZbjS1jKKwapdHNQyWFNwNmkEsJBAp4551652";
 
 export const SPL_MEMO_PROGRAM = "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr";

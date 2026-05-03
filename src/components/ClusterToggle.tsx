@@ -13,7 +13,7 @@ export function ClusterToggle() {
 
   return (
     <div
-      className="inline-flex rounded-md border border-slate-200 bg-slate-100/80 p-0.5 text-[13px] font-medium dark:border-slate-700 dark:bg-slate-900/80"
+      className="inline-flex rounded-full border border-neutral-200 bg-neutral-100/90 p-1 text-[12px] font-semibold tracking-wide dark:border-neutral-800 dark:bg-neutral-950/90"
       role="group"
       aria-label="Network"
     >
@@ -22,10 +22,10 @@ export function ClusterToggle() {
           key={o.value}
           type="button"
           onClick={() => setCluster(o.value)}
-          className={`rounded px-3 py-1.5 transition-colors ${
+          className={`rounded-full px-4 py-1.5 transition-colors ${
             cluster === o.value
-              ? "bg-white text-teal-800 shadow-sm dark:bg-slate-800 dark:text-teal-200"
-              : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+              ? "bg-neutral-950 text-white shadow-sm dark:bg-white dark:text-neutral-950"
+              : "text-[var(--muted)] hover:text-[var(--foreground)] dark:hover:text-slate-200"
           }`}
         >
           {o.label}

@@ -1,90 +1,110 @@
 import Link from "next/link";
+import {
+  BarChart3,
+  Cpu,
+  ShieldCheck,
+  Link2,
+  type LucideIcon,
+} from "lucide-react";
 import { demoDashboardHref } from "@/lib/solana/demo";
+
+function FeatureCard({
+  icon: Icon,
+  title,
+  body,
+}: {
+  icon: LucideIcon;
+  title: string;
+  body: string;
+}) {
+  return (
+    <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-[0_1px_2px_rgba(0,0,0,0.04)] dark:shadow-none">
+      <Icon
+        className="mb-3 size-5 text-[var(--accent)]"
+        strokeWidth={2}
+        aria-hidden
+      />
+      <h2 className="text-[15px] font-semibold text-[var(--foreground)]">{title}</h2>
+      <p className="mt-2 text-[14px] leading-relaxed text-[var(--muted)]">{body}</p>
+    </section>
+  );
+}
 
 export default function Home() {
   const demoHref = demoDashboardHref();
   return (
-    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-12 px-4 pb-20 pt-12 sm:px-6 lg:gap-14 lg:pt-16">
-      <div className="max-w-2xl space-y-6">
-        <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-teal-700 dark:text-teal-400">
+    <main className="mx-auto flex w-full max-w-[960px] flex-1 flex-col gap-14 px-4 pb-24 pt-12 sm:px-8 lg:pt-16">
+      <div className="max-w-xl space-y-5">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[var(--accent)] dark:opacity-90">
           Solpeek
         </p>
-        <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-[2.65rem] sm:leading-tight">
-          Read-only clarity for any Solana address.
+        <h1 className="text-balance text-[2.375rem] font-semibold leading-[1.08] tracking-tight text-[var(--foreground)] sm:text-[2.75rem]">
+          Read-only Solana address summaries.
         </h1>
-        <p className="max-w-xl text-[17px] leading-relaxed text-slate-600 dark:text-slate-400">
-          Paste a public address{" "}
-          <code className="rounded-md border border-slate-200 bg-white px-2 py-0.5 font-mono text-[13px] text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
-            /dashboard?address=…
-          </code>{" "}
-          for charts, shareable links, and a bounded snapshot—no seed phrase or custody.
+        <p className="max-w-lg text-[17px] leading-relaxed text-[var(--muted)]">
+          Paste a public key or open a bounded dashboard link. Charts and program rollups stay
+          on-chain-visible only; no seed phrase handling.
         </p>
       </div>
 
       <div className="flex flex-wrap gap-3">
         <Link
           href={demoHref}
-          className="inline-flex items-center justify-center rounded-md bg-teal-600 px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[var(--accent)] px-7 text-[15px] font-semibold text-white transition hover:bg-[var(--accent-hover)]"
         >
           View demo
         </Link>
         <Link
           href="/dashboard"
-          className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-6 py-2.5 text-[14px] font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:hover:bg-slate-900"
+          className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface)] px-7 text-[15px] font-semibold text-[var(--foreground)] transition hover:bg-[var(--accent-muted)]"
         >
           Use my wallet
         </Link>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <section className="rounded-xl border border-slate-200 bg-[var(--surface)] p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/60">
-          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">
-            Program-level view
-          </h2>
-          <p className="mt-2 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
-            See where activity clusters—tokens, swaps, NFT tooling—without drowning in raw transaction IDs.
-          </p>
-        </section>
-        <section className="rounded-xl border border-slate-200 bg-[var(--surface)] p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/60">
-          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">
-            Shareable & bounded
-          </h2>
-          <p className="mt-2 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Every view is anchored on a deterministic URL—a recent-window sample, open source and self-hostable.
-          </p>
-        </section>
-        <section className="rounded-xl border border-slate-200 bg-[var(--surface)] p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/60">
-          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">
-            Read-only by design
-          </h2>
-          <p className="mt-2 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Ledger reads only. Labels are heuristic clues—not legal or compliance adjudication.
-          </p>
-        </section>
+        <FeatureCard
+          icon={BarChart3}
+          title="Program rollups"
+          body="Grouped exposure to SPL, NFT metadata, routers, voting, and memo programs over a capped signature window."
+        />
+        <FeatureCard
+          icon={Link2}
+          title="Shareable URLs"
+          body="`/dashboard?address=` links resolve to the same deterministic read model, suited to ticketing or desks."
+        />
+        <FeatureCard
+          icon={ShieldCheck}
+          title="Custody-neutral"
+          body="Runs as read-only RPC + UI. Labels are heuristic; pair with compliance stacks where obligations exist."
+        />
       </div>
 
-      <section className="rounded-xl border border-slate-200 bg-teal-50/50 p-6 dark:border-teal-900/40 dark:bg-teal-950/25">
-        <h2 className="text-[15px] font-semibold text-teal-950 dark:text-teal-50">
-          Open stack, deterministic depth
-        </h2>
-        <p className="mt-3 max-w-3xl text-[14px] leading-relaxed text-teal-900/85 dark:text-teal-100/85">
-          MIT-licensed UI you can rerun behind IAM and your own RPC. Not a sanctioned-party database or full-history indexer—paired well with tighter internal tooling downstream.
-        </p>
+      <section className="rounded-2xl border border-[var(--border)] bg-[var(--accent-muted)] px-6 py-7 dark:bg-[var(--surface)]">
+        <div className="flex items-start gap-3">
+          <Cpu className="mt-0.5 size-5 shrink-0 text-[var(--accent)]" strokeWidth={2} aria-hidden />
+          <div>
+            <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Self-hosted option</h2>
+            <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[var(--muted)]">
+              Open MIT codebase: deploy behind your gateway, IAM, and chosen RPC URLs. Intended as a prelude screen, not sanctioned-party screening or indexer replacement.
+            </p>
+          </div>
+        </div>
       </section>
 
-      <section className="rounded-xl border border-slate-200 bg-[var(--surface)] p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950/60 md:grid md:grid-cols-2 md:gap-8">
+      <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-7 md:grid md:grid-cols-2 md:gap-10">
         <div>
-          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">Heuristic labels</h2>
-          <p className="mt-3 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
-            Categories like swap-style touches are fingerprints from observed program IDs. When you need production-grade tagging, plug in audited indexers—we stay intentionally lightweight above the RPC plane.
+          <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Heuristic tagging</h2>
+          <p className="mt-3 text-[14px] leading-relaxed text-[var(--muted)]">
+            Classification uses program-ID patterns. Substitute audited indexers wherever production attestations matter.
           </p>
         </div>
-        <div className="mt-6 md:mt-0">
-          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">Built with</h2>
-          <ul className="mt-3 list-inside list-disc space-y-1.5 text-[14px] text-slate-600 dark:text-slate-400">
+        <div className="mt-8 md:mt-0">
+          <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Stack</h2>
+          <ul className="mt-3 list-inside list-disc space-y-1.5 text-[14px] text-[var(--muted)]">
             <li>Next.js on Vercel</li>
-            <li>Wallet adapter + Solana web3 reads</li>
-            <li>Optional Solana Actions tip endpoint</li>
+            <li>Wallet adapter + JSON-RPC relay</li>
+            <li>Optional Solana Actions</li>
           </ul>
         </div>
       </section>

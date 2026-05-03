@@ -13,7 +13,7 @@ const DEFAULT_RPC: Record<SolanaCluster, string> = {
  * Resolve HTTP JSON-RPC endpoint for Wallet Adapter / reads.
  *
  * Mainnet in the browser defaults to the same-origin proxy `/api/solana-rpc`
- * (unless NEXT_PUBLIC_SOLANA_RPC_URL is set for a direct—public—URL).
+ * (unless NEXT_PUBLIC_SOLANA_RPC_URL is set for a direct public URL).
  * That avoids public-rpc 403s from browser contexts; the proxy uses SOLANA_RPC_URL on the server.
  */
 export function getEndpointForCluster(

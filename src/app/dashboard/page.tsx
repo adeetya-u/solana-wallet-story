@@ -105,7 +105,7 @@ function DashboardInner() {
       let msg =
         e instanceof Error
           ? e.message
-          : "Failed to fetch chain data — try another RPC or cluster.";
+          : "Failed to fetch chain data. Try another RPC or cluster.";
       const isRpc403 =
         /403|Access forbidden/i.test(msg) ||
         (/Server responded with .*403/i.test(msg) && msg.includes("jsonrpc"));
@@ -185,13 +185,13 @@ function DashboardInner() {
         )}
 
         <p className="max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
-          Open the demo wallet or paste an address. Read-only lookups follow the cluster switch in the header—no custody.
+          Open the demo wallet or paste an address. Read-only lookups follow the cluster switch in the header; nothing is custodied here.
         </p>
 
         <div className="flex flex-wrap gap-3">
           <Link
             href={demoDashboardHref()}
-            className="inline-flex items-center justify-center rounded-md bg-teal-600 px-5 py-2.5 text-[14px] font-semibold text-white shadow-sm hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600"
+            className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-[var(--accent-hover)]"
           >
             Demo wallet
           </Link>
@@ -219,7 +219,7 @@ function DashboardInner() {
               value={pasteInput}
               onChange={(e) => setPasteInput(e.target.value)}
               placeholder="Solana address (base58)"
-              className="w-full flex-1 rounded-md border border-slate-300 bg-white px-3 py-2.5 font-mono text-[13px] text-slate-900 outline-none ring-teal-500/0 transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/25 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
+              className="w-full flex-1 rounded-md border border-slate-300 bg-white px-3 py-2.5 font-mono text-[13px] text-slate-900 outline-none transition focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--focus-ring)] dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
             />
             <button
               type="submit"
@@ -234,7 +234,7 @@ function DashboardInner() {
           Connected? Use the wallet control in the header, then open{" "}
           <Link
             href="/dashboard"
-            className="font-medium text-teal-700 underline underline-offset-2 hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300"
+            className="font-semibold text-[var(--accent)] underline underline-offset-4 hover:text-[var(--accent-hover)]"
           >
             /dashboard
           </Link>{" "}
@@ -274,20 +274,20 @@ function DashboardInner() {
               type="button"
               onClick={() => void runInsights()}
               disabled={loading}
-              className="rounded-md border border-transparent bg-teal-600 px-4 py-2 text-[13px] font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-55 dark:bg-teal-500 dark:hover:bg-teal-600"
+              className="rounded-full border border-transparent bg-[var(--accent)] px-5 py-2 text-[13px] font-semibold text-white shadow-sm hover:bg-[var(--accent-hover)] disabled:opacity-55"
             >
               {loading ? "Loading…" : "Refresh"}
             </button>
             <a
               href="#solpeek-visualization"
-              className="rounded-md border border-slate-300 bg-transparent px-4 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-900"
+              className="rounded-full border border-[var(--border)] bg-[var(--surface)] px-5 py-2 text-[13px] font-semibold text-[var(--foreground)] hover:bg-[var(--accent-muted)] dark:hover:bg-neutral-900"
             >
               Charts
             </a>
             {explorerMode && (
               <Link
                 href="/dashboard"
-                className="rounded-md border border-slate-300 px-4 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-900"
+                className="rounded-full border border-[var(--border)] px-5 py-2 text-[13px] font-semibold text-[var(--foreground)] hover:bg-[var(--accent-muted)] dark:hover:bg-neutral-900"
               >
                 Your wallet
               </Link>
@@ -333,7 +333,7 @@ function DashboardInner() {
               />
               <button
                 type="button"
-                className="rounded-md bg-teal-600 px-5 py-2 text-[13px] font-semibold text-white shadow-sm hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600"
+                className="rounded-full bg-[var(--accent)] px-6 py-2 text-[13px] font-semibold text-white shadow-sm hover:bg-[var(--accent-hover)]"
                 onClick={() => void tryMintSnap()}
               >
                 Lookup balance

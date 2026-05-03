@@ -7,7 +7,7 @@ export const MAX_SIGNATURES = 24;
 
 const PAGE_SIZE = 24;
 
-/** Pace signature pagination — many upstreams throttle `getSignaturesForAddress`. */
+/** Pace signature pagination; many upstreams throttle `getSignaturesForAddress`. */
 const SIGNATURE_PAGE_GAP_MS = 22;
 
 /**
@@ -39,7 +39,7 @@ export const PARSED_TX_CONFIG = {
 };
 
 /**
- * Concurrent single-RPC `getTransaction` (parsed) — each POST is one JSON-RPC object, not an
+ * Concurrent single-RPC `getTransaction` (parsed). Each POST is one JSON-RPC object, not an
  * array batch (`_rpcBatchRequest`), so Helius free and similar gateways accept it while we keep latency down.
  */
 export const PARSED_FETCH_CONCURRENCY = 10;

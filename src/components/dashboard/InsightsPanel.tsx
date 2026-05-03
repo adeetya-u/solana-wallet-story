@@ -1,11 +1,19 @@
+import {
+  ArrowRightLeft,
+  Coins,
+  FileText,
+  ImageIcon,
+  Vote,
+  type LucideIcon,
+} from "lucide-react";
 import type { WalletInsights } from "@/lib/solana/insights";
 import { MAX_SIGNATURES } from "@/lib/solana/fetch";
 
 const BAR_PALETTE = [
-  "bg-gradient-to-r from-teal-600 to-cyan-500",
+  "bg-gradient-to-r from-emerald-600 to-green-400",
   "bg-gradient-to-r from-slate-600 to-slate-500",
   "bg-gradient-to-r from-amber-500 to-orange-600",
-  "bg-gradient-to-r from-emerald-600 to-teal-500",
+  "bg-gradient-to-r from-green-600 to-emerald-500",
   "bg-gradient-to-r from-blue-600 to-sky-500",
 ];
 
@@ -52,7 +60,7 @@ export function InsightsPanelSkeleton({
           />
         ))}
       </div>
-      <div className="h-64 animate-pulse rounded-xl border border-slate-200 bg-gradient-to-r from-slate-100 via-slate-50 to-teal-50/70 dark:border-slate-800 dark:from-slate-900 dark:via-slate-950 dark:to-teal-950/40" />
+      <div className="h-64 animate-pulse rounded-xl border border-slate-200 bg-gradient-to-r from-slate-100 via-[var(--accent-muted)]/40 to-green-50/70 dark:border-slate-800 dark:from-slate-900 dark:via-neutral-950 dark:to-[var(--accent-muted)]" />
       <div className="h-40 animate-pulse rounded-xl border border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-900" />
     </div>
   );
@@ -66,36 +74,47 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
       ? 0
       : Math.round((100 * insights.successfulTransactions) / totalAttempts);
 
-  const activityRows = [
+  const activityRows: {
+    key: string;
+    label: string;
+    sub: string;
+    count: number;
+    icon: LucideIcon;
+  }[] = [
     {
       key: "swap",
       label: "DEX / aggregator",
       sub: "Heuristic mapping",
       count: insights.buckets.swapLike,
+      icon: ArrowRightLeft,
     },
     {
       key: "token",
       label: "SPL Token",
       sub: "",
       count: insights.buckets.splTokenLike,
+      icon: Coins,
     },
     {
       key: "nft",
       label: "NFT / metadata",
       sub: "Metaplex family",
       count: insights.buckets.metadataLike,
+      icon: ImageIcon,
     },
     {
       key: "vote",
       label: "Vote program",
       sub: "",
       count: insights.buckets.voteLike,
+      icon: Vote,
     },
     {
       key: "memo",
       label: "Memo program",
       sub: "",
       count: insights.buckets.memoLike,
+      icon: FileText,
     },
   ];
 
@@ -118,7 +137,7 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
           <h2 className="sr-only">Recent signature window</h2>
         </div>
         {streaming && (
-          <div className="rounded border border-slate-300 bg-slate-50 px-2 py-1 text-[11px] font-medium text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300">
+          <div className="rounded-full border border-[var(--border)] bg-[var(--accent-muted)] px-3 py-1 text-[11px] font-medium text-[var(--foreground)] dark:bg-neutral-900">
             Partial · {insights.fetchedTransactions}/{insights.fetchedSignatures}
           </div>
         )}
@@ -143,8 +162,8 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
           label="Succeeded"
           value={insights.successfulTransactions}
           hint=""
-          className="border-emerald-200/70 ring-emerald-100 dark:border-emerald-900 dark:ring-emerald-900/50"
-          valueClass="text-emerald-700 dark:text-emerald-400"
+          className="border-emerald-200/80 ring-emerald-100 dark:border-emerald-900 dark:ring-emerald-950/55"
+          valueClass="text-[var(--chart-ok)]"
         />
         <GlowStat
           label="Failed"
@@ -161,7 +180,7 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
             Outcomes
           </p>
           <p className="mt-3 text-center text-[13px] text-slate-600 dark:text-slate-400">
-            <span className="font-medium text-emerald-600 dark:text-emerald-400">
+            <span className="font-medium text-[var(--chart-ok)]">
               {insights.successfulTransactions} success
             </span>
             <span className="text-slate-400 dark:text-slate-500"> / </span>
@@ -177,7 +196,7 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
             </p>
           )}
           <p className="mt-2 text-center font-mono text-2xl font-semibold tabular-nums text-slate-800 dark:text-slate-100">
-            {totalAttempts === 0 ? "—" : `${okPct}%`}
+            {totalAttempts === 0 ? "-" : `${okPct}%`}
           </p>
           <p className="mt-4 text-[12px] text-slate-500 dark:text-slate-400">
             {insights.fetchedTransactions} parsed TXs · window only.
@@ -190,6 +209,7 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
           </p>
           <ul className="mt-3 space-y-4">
             {activityRows.map((row, idx) => {
+              const Icon = row.icon;
               const pct = insights.fetchedTransactions
                 ? Math.round((100 * row.count) / insights.fetchedTransactions)
                 : 0;
@@ -198,13 +218,21 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
               return (
                 <li key={row.key}>
                   <div className="flex items-baseline justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="text-[14px] font-medium text-slate-900 dark:text-slate-100">
-                        {row.label}
-                      </p>
-                      {row.sub ? (
-                        <p className="text-[12px] text-slate-500 dark:text-slate-400">{row.sub}</p>
-                      ) : null}
+                    <div className="flex min-w-0 gap-3">
+                      <span
+                        className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--accent-muted)] text-[var(--accent)] dark:bg-neutral-900 dark:text-emerald-300"
+                        aria-hidden
+                      >
+                        <Icon className="size-4 stroke-[2]" />
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[14px] font-medium text-slate-900 dark:text-slate-100">
+                          {row.label}
+                        </p>
+                        {row.sub ? (
+                          <p className="text-[12px] text-slate-500 dark:text-slate-400">{row.sub}</p>
+                        ) : null}
+                      </div>
                     </div>
                     <span className="tabular-nums text-[13px] font-semibold text-slate-800 dark:text-slate-100">
                       {row.count}{" "}
@@ -276,7 +304,7 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
           Slot span (parsed window)
         </p>
         <p className="mt-3 font-mono text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
-          {insights.oldestFetchedSlot ?? "—"} → {insights.newestFetchedSlot ?? "—"}
+          {insights.oldestFetchedSlot ?? "-"} → {insights.newestFetchedSlot ?? "-"}
         </p>
       </div>
     </div>
@@ -284,10 +312,10 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
 }
 
 const PROGRAM_ROW_TINTS = [
-  { track: "bg-slate-200 dark:bg-slate-800", bar: "bg-gradient-to-r from-teal-600 to-cyan-600" },
+  { track: "bg-slate-200 dark:bg-slate-800", bar: "bg-gradient-to-r from-emerald-600 to-green-500" },
   { track: "bg-slate-200 dark:bg-slate-800", bar: "bg-gradient-to-r from-sky-600 to-blue-600" },
   { track: "bg-slate-200 dark:bg-slate-800", bar: "bg-gradient-to-r from-amber-500 to-orange-600" },
-  { track: "bg-slate-200 dark:bg-slate-800", bar: "bg-gradient-to-r from-emerald-600 to-teal-600" },
+  { track: "bg-slate-200 dark:bg-slate-800", bar: "bg-gradient-to-r from-green-600 to-emerald-500" },
   { track: "bg-slate-200 dark:bg-slate-800", bar: "bg-gradient-to-r from-slate-600 to-slate-500" },
 ] as const;
 
@@ -339,7 +367,7 @@ function SuccessRing({ pct }: { pct: number }) {
         <div
           className="absolute inset-0 rounded-full shadow-inner"
           style={{
-            background: `conic-gradient(rgb(13 148 136) ${clipped * 3.6}deg, rgb(244 114 182) 0deg)`,
+            background: `conic-gradient(var(--chart-ok) ${clipped * 3.6}deg, var(--chart-fail) 0deg)`,
           }}
         />
         <div className="absolute inset-[12%] rounded-full bg-[var(--surface)] dark:bg-slate-950" />
