@@ -7,8 +7,13 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
+import type { ConnectionConfig } from "@solana/web3.js";
 import { useMemo } from "react";
 import { ClusterProvider, useCluster } from "@/components/wallet/ClusterContext";
+
+const SOLANA_CONNECTION_CONFIG = {
+  commitment: "confirmed",
+} satisfies ConnectionConfig;
 
 import "@solana/wallet-adapter-react-ui/styles.css";
 
@@ -31,7 +36,7 @@ function WalletInner({ children }: { children: React.ReactNode }) {
   return (
     <ConnectionProvider
       endpoint={endpoint}
-      config={{ commitment: "confirmed" }}
+      config={SOLANA_CONNECTION_CONFIG}
       key={endpoint}
     >
       <WalletProvider wallets={wallets} autoConnect>

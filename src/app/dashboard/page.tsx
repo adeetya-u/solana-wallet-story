@@ -3,7 +3,14 @@
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { PublicKey } from "@solana/web3.js";
 import { useCluster } from "@/components/wallet/ClusterContext";
 import { DEMO_WALLET_MAINNET, demoDashboardHref } from "@/lib/solana/demo";
@@ -54,6 +61,9 @@ function DashboardInner() {
   const [insights, setInsights] = useState<WalletInsights | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  /** Drop stale resolves when deps change mid-flight or React Strict Mode double-invokes effects. */
+  const insightsGenerationRef = useRef(0);
   const [pasteInput, setPasteInput] = useState("");
 
   const [mintInput, setMintInput] = useState("");
@@ -61,13 +71,17 @@ function DashboardInner() {
 
   const runInsights = useCallback(async () => {
     if (!targetKey) return;
+    const generation = ++insightsGenerationRef.current;
     setLoading(true);
     setError(null);
     setInsights(null);
     try {
       const data = await loadWalletInsights(connection, targetKey);
+      if (insightsGenerationRef.current !== generation) return;
       setInsights(data);
+      setError(null);
     } catch (e) {
+      if (insightsGenerationRef.current !== generation) return;
       let msg =
         e instanceof Error
           ? e.message
@@ -78,10 +92,18 @@ function DashboardInner() {
       ) {
         msg +=
           " Set SOLANA_RPC_URL on Vercel (Helius or QuickNode mainnet HTTPS) so /api/solana-rpc relays from Vercel, not your browser.";
+      } else if (
+        /(^|\s)(429)(\s|:|$)/i.test(msg) ||
+        /Too many requests/i.test(msg)
+      ) {
+        msg +=
+          " This is RPC rate-limiting (`getTransaction` batching). Upgrade `SOLANA_RPC_URL` (paid Helius/QuickNode tier if needed), wait a minute, or hit Refresh once.";
       }
       setError(msg);
     } finally {
-      setLoading(false);
+      if (insightsGenerationRef.current === generation) {
+        setLoading(false);
+      }
     }
   }, [connection, targetKey]);
 
