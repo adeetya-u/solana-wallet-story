@@ -14,6 +14,7 @@ import {
 import { PublicKey } from "@solana/web3.js";
 import { useCluster } from "@/components/wallet/ClusterContext";
 import { DEMO_WALLET_MAINNET, demoDashboardHref } from "@/lib/solana/demo";
+import { MAX_SIGNATURES } from "@/lib/solana/fetch";
 import {
   loadMintSnapshot,
   loadWalletInsights,
@@ -278,7 +279,8 @@ function DashboardInner() {
 
       {loading && (
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Loading bounded history from RPC…
+          Fetching up to {MAX_SIGNATURES} newest signatures via parallel RPC reads (bounded
+          window, no indexer)—usually a few seconds.
         </p>
       )}
 

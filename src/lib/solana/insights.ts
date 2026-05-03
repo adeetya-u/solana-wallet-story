@@ -12,7 +12,7 @@ import {
   VOTE_PROGRAM,
 } from "@/lib/solana/constants";
 import {
-  fetchParsedTransactionsSequential,
+  fetchParsedTransactionsConcurrent,
   fetchRecentSignatures,
   MAX_SIGNATURES,
 } from "@/lib/solana/fetch";
@@ -79,7 +79,7 @@ export async function loadWalletInsights(
 ): Promise<WalletInsights> {
   const signatures = await fetchRecentSignatures(connection, pubkey);
   const sigStrings = signatures.map((s) => s.signature).filter(Boolean);
-  const txs = await fetchParsedTransactionsSequential(connection, sigStrings);
+  const txs = await fetchParsedTransactionsConcurrent(connection, sigStrings);
 
   const programCounts = new Map<string, number>();
   const bucketsAgg = {

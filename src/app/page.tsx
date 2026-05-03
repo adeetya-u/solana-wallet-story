@@ -10,12 +10,13 @@ export default function Home() {
           Solpeek
         </p>
         <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
-          A quick read-only snapshot of any Solana address.
+          A fast read-only snapshot of any Solana address.
         </h1>
         <p className="max-w-xl text-pretty text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Explore recent signatures, programs involved, and a short activity summary.
-          Wallet connect is optional—use the demo link for a seeded mainnet account, paste
-          an address yourself, or sign in when you’re ready.
+          See who a wallet&nbsp;<span className="font-medium text-zinc-700 dark:text-zinc-300">actually touches on-chain</span>
+          —top programs and a capped recent window—not an endless tx feed. Wallet connect is
+          optional: open the demo, paste any pubkey as <code className="text-sm">/dashboard?address=…</code>
+          {" "}for a shareable diligence link.
         </p>
       </div>
 
@@ -33,6 +34,19 @@ export default function Home() {
           Use my wallet
         </Link>
       </div>
+
+      <section className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50/70 p-5 text-sm text-violet-950 dark:border-violet-900/50 dark:bg-violet-950/30 dark:text-violet-50">
+        <p className="font-semibold text-violet-900 dark:text-violet-100">
+          Utility explorers don’t prioritize
+        </p>
+        <p className="leading-relaxed text-violet-900/85 dark:text-violet-100/90">
+          Block explorers are built to scroll signatures. Solpeek summarizes{" "}
+          <strong className="font-medium">program-level exposure</strong> and success vs failed
+          txs in one bounded slice—cheap to run without an indexer, ideal when you’re vetting an
+          OTC counterparty, spot-checking a treasury or market-maker wallet, or sanity-checking
+          integrations (Jupiter, SPL, staking, NFT tooling) before you wire real flows.
+        </p>
+      </section>
 
       <section className="rounded-2xl border border-zinc-200 bg-zinc-50/90 p-5 text-sm text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100">
         <p className="font-medium text-zinc-900 dark:text-zinc-50">Read-only</p>

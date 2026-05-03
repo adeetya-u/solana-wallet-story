@@ -2,13 +2,13 @@ import type { ConfirmedSignatureInfo, ParsedTransactionWithMeta } from "@solana/
 import { Connection, PublicKey } from "@solana/web3.js";
 import { sleep } from "@/lib/solana/delay";
 
-/** Hard cap keeps free RPC quotas predictable. */
-export const MAX_SIGNATURES = 100;
+/** Hard cap: smaller window = faster loads on free RPC tiers (parallel single calls, not batch RPC). */
+export const MAX_SIGNATURES = 48;
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 24;
 
 /** Pace signature pagination — many upstreams throttle `getSignaturesForAddress`. */
-const SIGNATURE_PAGE_GAP_MS = 65;
+const SIGNATURE_PAGE_GAP_MS = 40;
 
 /**
  * Paginate `getSignaturesForAddress` until `max` signatures or exhaustion.
@@ -34,28 +34,34 @@ export async function fetchRecentSignatures(
   return all;
 }
 
-/** Per request: Helius free tier rejects JSON-RPC *batch* envelopes; pacing still eases RPM. */
-const BETWEEN_PARSED_TX_MS = 135;
-
 const PARSED_TX_CONFIG = { maxSupportedTransactionVersion: 0 as const };
 
 /**
- * Sequential `getTransaction` (parsed) calls — avoids `_rpcBatchRequest`, which paid-only
- * gateways like Helius free disallow even for a length-1 batch.
+ * Concurrent single-RPC `getTransaction` (parsed) — each POST is one JSON-RPC object, not an
+ * array batch (`_rpcBatchRequest`), so Helius free and similar gateways accept it while we keep latency down.
  */
-export async function fetchParsedTransactionsSequential(
+const PARSED_FETCH_CONCURRENCY = 8;
+
+/** Short pause between parallel waves so RPM quotas are less likely to trip. */
+const PARSED_FETCH_WAVE_GAP_MS = 55;
+
+export async function fetchParsedTransactionsConcurrent(
   connection: Connection,
   signatures: string[],
 ): Promise<ParsedTransactionWithMeta[]> {
   const out: ParsedTransactionWithMeta[] = [];
 
-  for (let i = 0; i < signatures.length; i++) {
-    if (i > 0) await sleep(BETWEEN_PARSED_TX_MS);
-    const t = await connection.getParsedTransaction(
-      signatures[i]!,
-      PARSED_TX_CONFIG,
+  for (let base = 0; base < signatures.length; base += PARSED_FETCH_CONCURRENCY) {
+    if (base > 0) await sleep(PARSED_FETCH_WAVE_GAP_MS);
+    const slice = signatures.slice(base, base + PARSED_FETCH_CONCURRENCY);
+    const wave = await Promise.all(
+      slice.map((sig) =>
+        connection.getParsedTransaction(sig, PARSED_TX_CONFIG),
+      ),
     );
-    if (t !== null) out.push(t);
+    for (const t of wave) {
+      if (t !== null) out.push(t);
+    }
   }
 
   return out;

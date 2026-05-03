@@ -14,9 +14,13 @@ Inspired in part by Solana Foundation [RFP themes](https://solana.com/developers
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
+## Why this exists (business / trader / dev angle)
+
+Most products either (a) dump raw transaction rows like a block explorer, or (b) require a paid indexer for rich labels. Solpeek sits in the middle: **fast, shareable, read-only program exposure** for the **newest N signatures**—so you can answer “what does this wallet actually touch?” (DEX routers, SPL, staking, metadata programs, failure rate in sample) **before** you integrate it in code or move funds OTC. No custody, no seed phrase; optional wallet connect for your own address.
+
 ## Architecture
 
-Mainnet reads go to **`/api/solana-rpc`** (same origin), which forwards to **`SOLANA_RPC_URL`** on the server so keys stay off the client and public-RPC **403** from browsers is avoided. Devnet still uses the public devnet cluster URL. Wallet Adapter uses `@solana/web3.js` (`ConnectionProvider`). There is **no indexer** yet: pagination is capped (default 100 signatures) and parsed transactions load in small batches.
+Mainnet reads go to **`/api/solana-rpc`** (same origin), which forwards to **`SOLANA_RPC_URL`** on the server so keys stay off the client and public-RPC **403** from browsers is avoided. Devnet still uses the public devnet cluster URL. Wallet Adapter uses `@solana/web3.js` (`ConnectionProvider`). There is **no indexer**: the UI caps history (default **48** newest signatures) and loads parsed `getTransaction` calls as **parallel single-RPC requests** (not JSON-RPC batch arrays), which stays compatible with free RPC tiers that disallow batching.
 
 ```mermaid
 flowchart LR
@@ -43,7 +47,7 @@ flowchart LR
 |------|-----------------------|
 | **Instant demo** | Home → “Try live demo” loads a busy mainnet signer with **no wallet connect** |
 | **Explorer mode** | `/dashboard?address=<pubkey>` read-only for any wallet or program-owned account |
-| **Dashboard** | Paginated signatures, parsed tx stats, heuristic “behavior hints” from program IDs |
+| **Dashboard** | Bounded-window program rollup + heuristic “behavior hints” (explorer-style tx lists deliberately out of scope for speed) |
 | **Mainnet RPC proxy** | Browser → `/api/solana-rpc` → `SOLANA_RPC_URL` (avoids public-RPC **403**) |
 | **Cluster toggle** | `mainnet-beta` vs `devnet`, persisted locally |
 | **Optional mint lookup** | `getParsedTokenAccountsByOwner` for a pasted mint pubkey |
