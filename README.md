@@ -1,14 +1,14 @@
 # Solpeek
 
-**Site:** [`https://solpeek-tan.vercel.app`](https://solpeek-tan.vercel.app) — try the [live demo](https://solpeek-tan.vercel.app/dashboard?address=7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU), paste any address, or connect Phantom / Solflare on **Mainnet** or **Devnet**.
+**Site:** [`https://solpeek-live.vercel.app`](https://solpeek-live.vercel.app) — try the [live demo](https://solpeek-live.vercel.app/dashboard?address=7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU), paste any address, or connect Phantom / Solflare on **Mainnet** or **Devnet**.
 
-**About `solpeek.vercel.app`:** that hostname currently serves an **older Create React App** (“Solpeek Stream”), not this Next repo. Aliasing or `domains add --force` from the **`solpeek`** project returns **403** because the short name is **already bound elsewhere** on Vercel (outside this team’s alias list). To use it again: in the dashboard, open the **team or account that owns that deployment**, remove **`solpeek.vercel.app`** from that project’s **Domains**, then attach it under **solpeek** (Next) or run `vercel domains add solpeek.vercel.app --force` from the linked repo.
+Production is wired to the Vercel project **`solpeek-live`** (Next.js on this repo). After `git clone`, run `vercel link` and pick that project if you deploy from the CLI.
 
 **JSON-RPC `403` in the browser:** set **`SOLANA_RPC_URL`** (Helius / QuickNode mainnet HTTPS) on Vercel so **`/api/solana-rpc`** can relay from the server; then redeploy.
 
-Set **`NEXT_PUBLIC_APP_URL`** to your real public origin (for Actions metadata), e.g. **`https://solpeek-tan.vercel.app`**, unless you reclaim **`https://solpeek.vercel.app`** as above.
+On Vercel → **solpeek-live** → **Environment Variables**, set **`NEXT_PUBLIC_APP_URL`** to **`https://solpeek-live.vercel.app`** (Actions metadata), copy **`SOLANA_RPC_URL`** and any optional vars from the old **`solpeek`** project if needed, then **Redeploy**.
 
-If Production still looks wrong after that, open Vercel → **solpeek** → confirm the latest **Next** deployment is promoted to Production and check **Deployment Protection**.
+If Production looks gated or stale, open **solpeek-live** → **Deployments** → confirm the latest build is promoted and review **Deployment Protection**.
 
 Inspired in part by Solana Foundation [RFP themes](https://solana.com/developers/defi/rfp/free-ideas)—keeping the build small and runnable on Vercel without an indexer.
 
