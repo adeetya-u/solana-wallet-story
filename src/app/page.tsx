@@ -10,13 +10,17 @@ export default function Home() {
           Solpeek
         </p>
         <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
-          A fast read-only snapshot of any Solana address.
+          Counterparty-ready Solana footprint—not another chain mirror.
         </h1>
         <p className="max-w-xl text-pretty text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-          See who a wallet&nbsp;<span className="font-medium text-zinc-700 dark:text-zinc-300">actually touches on-chain</span>
-          —top programs and a capped recent window—not an endless tx feed. Wallet connect is
-          optional: open the demo, paste any pubkey as <code className="text-sm">/dashboard?address=…</code>
-          {" "}for a shareable diligence link.
+          Solpeek doesn’t ingest “all chain data”; it emits a bounded,{" "}
+          <span className="font-medium text-zinc-700 dark:text-zinc-300">
+            program-first intelligence brief
+          </span>
+          {" "}
+          you can cite in underwriting, escalation, or product UI. Paste any pubkey—or ship the
+          same pattern behind your SSO and RPC—with{" "}
+          <code className="text-sm">/dashboard?address=…</code> as your deep-link dossier primitive.
         </p>
       </div>
 
@@ -37,15 +41,35 @@ export default function Home() {
 
       <section className="space-y-3 rounded-2xl border border-violet-200 bg-violet-50/70 p-5 text-sm text-violet-950 dark:border-violet-900/50 dark:bg-violet-950/30 dark:text-violet-50">
         <p className="font-semibold text-violet-900 dark:text-violet-100">
-          Utility explorers don’t prioritize
+          Built to embed—not to scrape louder
         </p>
         <p className="leading-relaxed text-violet-900/85 dark:text-violet-100/90">
-          Block explorers are built to scroll signatures. Solpeek summarizes{" "}
-          <strong className="font-medium">program-level exposure</strong> and success vs failed
-          txs in one bounded slice—cheap to run without an indexer, ideal when you’re vetting an
-          OTC counterparty, spot-checking a treasury or market-maker wallet, or sanity-checking
-          integrations (Jupiter, SPL, staking, NFT tooling) before you wire real flows.
+          Scrapers hoard JSON blobs; explorers optimize for infinity scroll. Solpeek outputs a{" "}
+          <strong className="font-medium">
+            repeatable decision surface
+          </strong>
+          : dominant programs touched, asymmetric failure hints, heuristic lane tags—anchored on a deterministic
+          URL your legal, custody, OTC, or support stack can staple to a CRM ticket without asking
+          the customer to screenshot Solscan rows.
         </p>
+      </section>
+
+      <section className="space-y-4 rounded-2xl border border-zinc-300 bg-white p-6 shadow-sm dark:border-zinc-700 dark:bg-zinc-950">
+        <p className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          Why a venue like Gemini cares
+        </p>
+        <p className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+          Regulated desks need <strong className="font-medium text-zinc-900 dark:text-zinc-100">articulable, timestampable artifacts</strong>{" "}
+          when Solana payouts, listings, custody escalations, or institutional onboarding touch a novel
+          address.           Fork this MIT stack behind your IAM and KMS, strap your sanctioned-party rules on top,
+          and you inherit a programmable “footprint synopsis” primitive instead of commissioning
+          another opaque API aggregation layer.
+        </p>
+        <ul className="list-inside list-disc space-y-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <li><span className="font-medium text-zinc-900 dark:text-zinc-200">Operational velocity:</span> one URL, one bounded sample—perfect for escalation triage.</li>
+          <li><span className="font-medium text-zinc-900 dark:text-zinc-200">Architecture fit:</span> same-origin RPC proxy isolates upstream keys inside your infra boundary.</li>
+          <li><span className="font-medium text-zinc-900 dark:text-zinc-200">Auditability:</span> open-source rollup logic reviewers can inspect—no opaque risk score vending.</li>
+        </ul>
       </section>
 
       <section className="rounded-2xl border border-zinc-200 bg-zinc-50/90 p-5 text-sm text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100">

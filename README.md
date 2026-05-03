@@ -14,9 +14,19 @@ Inspired in part by Solana Foundation [RFP themes](https://solana.com/developers
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Why this exists (business / trader / dev angle)
+## Why this exists (business angle—not “yet another RPC passthrough”)
 
-Most products either (a) dump raw transaction rows like a block explorer, or (b) require a paid indexer for rich labels. Solpeek sits in the middle: **fast, shareable, read-only program exposure** for the **newest N signatures**—so you can answer “what does this wallet actually touch?” (DEX routers, SPL, staking, metadata programs, failure rate in sample) **before** you integrate it in code or move funds OTC. No custody, no seed phrase; optional wallet connect for your own address.
+**Scrapers** mirror blobs of chain state; **explorers** optimize for infinite transaction scroll. Neither produces a crisp *artifact* you can attach to underwriting, OTC, custody escalation, or product UX. Solpeek is deliberately a **bounded program-footprint synopsis**: dominant programs touched, heuristic lane tags (DEX-like, SPL, voting, memo, NFT metadata footprints), success vs failure in sample—exported as **deterministic deep links** (`/dashboard?address=…`) your ops stack can cite.
+
+### Incorporation story (illustrative: exchange-grade desks)
+
+Venues with Solana payouts, listings, staking, custody, or institutional onboarding need repeatability: *what did we know at decision time about this pubkey?* This repo slots into that narrative as MIT-licensed scaffolding you host—**same-origin RPC proxy** for secret hygiene + **readable rollup code** auditors can inspect. It is **not** a sanctioned-party database, KYC engine, or full-history indexer; it complements those systems with a lightweight, human-legible prelude you can bolt policy onto.
+
+Teams evaluating integration (Gemini-caliber desks, OTC primes, treasury SaaS, regulated custodians) get a differentiated hook: ship **articulable evidence** derived from bounded public-RPC reads faster than commissioning bespoke chain scrapers—with an honest scope box (recent window cap, heuristic labels—not court-grade attribution).
+
+### Still useful solo
+
+Traders/devs inherit the same surface for quick counterpart skims—just without SSO and policy layers bolted on.
 
 ## Architecture
 
