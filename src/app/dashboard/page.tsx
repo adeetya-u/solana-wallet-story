@@ -86,10 +86,13 @@ function DashboardInner() {
         e instanceof Error
           ? e.message
           : "Failed to fetch chain data — try another RPC or cluster.";
-      if (
+      const isRpc403 =
         /403|Access forbidden/i.test(msg) ||
-        (/Server responded with .*403/i.test(msg) && msg.includes("jsonrpc"))
-      ) {
+        (/Server responded with .*403/i.test(msg) && msg.includes("jsonrpc"));
+      if (/Batch requests|-32403|batch requests/i.test(msg)) {
+        msg +=
+          " Some RPC free tiers disallow JSON-RPC *batch* calls; Solpeek loads txs one-by-one. If this persists, confirm you deployed latest and check provider docs.";
+      } else if (isRpc403) {
         msg +=
           " Set SOLANA_RPC_URL on Vercel (Helius or QuickNode mainnet HTTPS) so /api/solana-rpc relays from Vercel, not your browser.";
       } else if (
@@ -97,7 +100,7 @@ function DashboardInner() {
         /Too many requests/i.test(msg)
       ) {
         msg +=
-          " This is RPC rate-limiting (`getTransaction` batching). Upgrade `SOLANA_RPC_URL` (paid Helius/QuickNode tier if needed), wait a minute, or hit Refresh once.";
+          " RPC rate-limit: wait briefly, bump your provider plan if needed, or hit Refresh.";
       }
       setError(msg);
     } finally {

@@ -34,31 +34,28 @@ export async function fetchRecentSignatures(
   return all;
 }
 
+/** Per request: Helius free tier rejects JSON-RPC *batch* envelopes; pacing still eases RPM. */
+const BETWEEN_PARSED_TX_MS = 135;
+
+const PARSED_TX_CONFIG = { maxSupportedTransactionVersion: 0 as const };
+
 /**
- * One tx per RPC batch chunk: `@solana/web3.js` batch-stacks `getTransaction` in a
- * single HTTP call; upstreams rate-limit per method, so small batches reduce burst RPM.
+ * Sequential `getTransaction` (parsed) calls — avoids `_rpcBatchRequest`, which paid-only
+ * gateways like Helius free disallow even for a length-1 batch.
  */
-const FETCH_CHUNK = 1;
-
-/** Breathing room between chunk requests so retries do not collide with quotas. */
-const CHUNK_GAP_MS = 135;
-
-/** Fetch parsed transactions with small sequential chunks to ease rate limits. */
-export async function fetchParsedTransactionsBatched(
+export async function fetchParsedTransactionsSequential(
   connection: Connection,
   signatures: string[],
 ): Promise<ParsedTransactionWithMeta[]> {
   const out: ParsedTransactionWithMeta[] = [];
 
-  for (let i = 0; i < signatures.length; i += FETCH_CHUNK) {
-    if (i > 0) await sleep(CHUNK_GAP_MS);
-    const chunk = signatures.slice(i, i + FETCH_CHUNK);
-    const batch = await connection.getParsedTransactions(chunk, {
-      maxSupportedTransactionVersion: 0,
-    });
-    for (const t of batch) {
-      if (t !== null) out.push(t);
-    }
+  for (let i = 0; i < signatures.length; i++) {
+    if (i > 0) await sleep(BETWEEN_PARSED_TX_MS);
+    const t = await connection.getParsedTransaction(
+      signatures[i]!,
+      PARSED_TX_CONFIG,
+    );
+    if (t !== null) out.push(t);
   }
 
   return out;
