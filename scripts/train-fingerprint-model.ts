@@ -15,6 +15,10 @@ type TrainedModelV1 = {
   std: number[];
   centroids: number[][];
   examplesPerCluster: number[];
+  distanceCalibration: {
+    global: { p50: number; p90: number };
+    perCluster: { p50: number; p90: number; n: number }[];
+  };
 };
 
 const FEATURE_NAMES = [
@@ -147,6 +151,16 @@ function kmeans(vs: Vector[], k: number, iters = 30): {
   return { centroids, assignments, counts };
 }
 
+function quantile(sorted: number[], q: number): number {
+  if (sorted.length === 0) return 0;
+  const pos = (sorted.length - 1) * q;
+  const base = Math.floor(pos);
+  const rest = pos - base;
+  const a = sorted[base] ?? sorted[sorted.length - 1]!;
+  const b = sorted[base + 1] ?? sorted[sorted.length - 1]!;
+  return a + rest * (b - a);
+}
+
 function readAddresses(filePath: string): string[] {
   const raw = fs.readFileSync(filePath, "utf8");
   return raw
@@ -258,6 +272,24 @@ async function main() {
 
   const km = kmeans(z, k, 40);
 
+  const distances: number[] = [];
+  const perClusterDistances: number[][] = Array.from({ length: k }, () => []);
+  for (let i = 0; i < z.length; i++) {
+    const a = km.assignments[i]!;
+    const d = l2(z[i]!, km.centroids[a]!);
+    distances.push(d);
+    perClusterDistances[a]!.push(d);
+  }
+  distances.sort((a, b) => a - b);
+  for (const arr of perClusterDistances) arr.sort((a, b) => a - b);
+  const globalP50 = quantile(distances, 0.5);
+  const globalP90 = quantile(distances, 0.9);
+  const perCluster = perClusterDistances.map((arr) => ({
+    p50: quantile(arr, 0.5),
+    p90: quantile(arr, 0.9),
+    n: arr.length,
+  }));
+
   const model: TrainedModelV1 = {
     version: 1,
     trainedAtIso: new Date().toISOString(),
@@ -267,6 +299,10 @@ async function main() {
     std: sd,
     centroids: km.centroids,
     examplesPerCluster: km.counts,
+    distanceCalibration: {
+      global: { p50: globalP50, p90: globalP90 },
+      perCluster,
+    },
   };
 
   const outPath = path.resolve(root, "public", "fingerprint-model.json");

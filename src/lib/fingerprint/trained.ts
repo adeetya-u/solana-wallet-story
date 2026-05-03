@@ -10,13 +10,30 @@ type TrainedModelV1 = {
   std: number[];
   centroids: number[][];
   examplesPerCluster: number[];
+  distanceCalibration?: {
+    global: { p50: number; p90: number };
+    perCluster: { p50: number; p90: number; n: number }[];
+  };
 };
 
 export type ClusterMatch = {
   clusterIndex: number;
   distance: number;
-  percentile: number; // heuristic 0..100 lower distance is "more typical"
+  strength: number; // 0..100 higher is "closer match"
 };
+
+function clamp01(x: number): number {
+  if (Number.isNaN(x)) return 0;
+  if (x < 0) return 0;
+  if (x > 1) return 1;
+  return x;
+}
+
+function strengthFromCalibratedDistance(d: number, p50: number, p90: number): number {
+  const span = Math.max(1e-6, p90 - p50);
+  const t = clamp01((d - p50) / span);
+  return Math.round(100 * (1 - t));
+}
 
 function l2(a: number[], b: number[]): number {
   let s = 0;
@@ -74,13 +91,16 @@ export function matchCluster(
     }
   }
 
-  // Very small heuristic: map the best distance against the distribution of centroid distances.
-  // Lower is "more typical". This is not a statistically rigorous percentile.
-  const sorted = [...dists].sort((a, b) => a - b);
-  const rank = sorted.indexOf(bestD);
-  const pct = Math.round((100 * (rank + 1)) / sorted.length);
+  let strength = Math.max(0, Math.min(100, Math.round(100 * Math.exp(-bestD))));
+  const cal = model.distanceCalibration;
+  if (cal) {
+    const per = cal.perCluster?.[bestIdx];
+    const p50 = per?.p50 ?? cal.global.p50;
+    const p90 = per?.p90 ?? cal.global.p90;
+    strength = strengthFromCalibratedDistance(bestD, p50, p90);
+  }
 
-  return { clusterIndex: bestIdx, distance: bestD, percentile: pct };
+  return { clusterIndex: bestIdx, distance: bestD, strength };
 }
 
 let cached: TrainedModelV1 | null = null;

@@ -218,7 +218,7 @@ export function InsightsPanel({
         </p>
         {clusterMatch ? (
           <p className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
-            Similarity: closest to cluster {clusterMatch.clusterIndex + 1} (score {clusterMatch.percentile}/100).
+            Similarity: closest to cluster {clusterMatch.clusterIndex + 1} (match {clusterMatch.strength}/100).
           </p>
         ) : null}
         <p className="mt-2 text-[15px] font-semibold tracking-tight text-slate-900 dark:text-slate-50">
