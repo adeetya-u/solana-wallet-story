@@ -4,88 +4,87 @@ import { demoDashboardHref } from "@/lib/solana/demo";
 export default function Home() {
   const demoHref = demoDashboardHref();
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-10 px-4 py-14 sm:px-6 lg:gap-14 lg:py-20">
-      <div className="space-y-5">
-        <p className="text-sm font-medium uppercase tracking-wider text-violet-600 dark:text-violet-400">
+    <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-12 px-4 pb-20 pt-12 sm:px-6 lg:gap-14 lg:pt-16">
+      <div className="max-w-2xl space-y-6">
+        <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-teal-700 dark:text-teal-400">
           Solpeek
         </p>
-        <h1 className="text-balance text-4xl font-semibold tracking-tight text-zinc-900 dark:text-white sm:text-5xl">
-          Understand any Solana wallet—in plain English and color.
+        <h1 className="text-balance text-4xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-[2.65rem] sm:leading-tight">
+          Read-only clarity for any Solana address.
         </h1>
-        <p className="max-w-xl text-pretty text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
-          Paste a public address (
-          <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-sm dark:bg-zinc-800">
+        <p className="max-w-xl text-[17px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Paste a public address{" "}
+          <code className="rounded-md border border-slate-200 bg-white px-2 py-0.5 font-mono text-[13px] text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
             /dashboard?address=…
-          </code>
-          ) and instantly see{" "}
-          <strong className="font-semibold text-zinc-900 dark:text-zinc-100">
-            charts, percentages,{" "}
-          </strong>
-          and “what kind of Solana moves happened lately”—no seed phrase ever, wallet optional for your own vault.
+          </code>{" "}
+          for charts, shareable links, and a bounded snapshot—no seed phrase or custody.
         </p>
       </div>
 
       <div className="flex flex-wrap gap-3">
         <Link
           href={demoHref}
-          className="rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-600 px-5 py-2.5 text-sm font-medium text-white shadow-lg shadow-violet-500/30 transition hover:from-violet-500 hover:to-fuchsia-500"
+          className="inline-flex items-center justify-center rounded-md bg-teal-600 px-6 py-2.5 text-[14px] font-semibold text-white shadow-sm transition hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600"
         >
-          See the colorful demo
+          View demo
         </Link>
         <Link
           href="/dashboard"
-          className="rounded-full border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 transition hover:border-zinc-400 hover:bg-white dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-900"
+          className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-white px-6 py-2.5 text-[14px] font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-50 dark:hover:bg-slate-900"
         >
-          Connect my wallet
+          Use my wallet
         </Link>
       </div>
 
-      <section className="rounded-3xl border-2 border-violet-200/80 bg-gradient-to-br from-violet-500/10 via-fuchsia-500/10 to-cyan-500/10 p-6 shadow-lg shadow-violet-500/5 dark:border-violet-800/70 dark:from-violet-950/50 dark:via-fuchsia-950/30 dark:to-cyan-950/20">
-        <p className="text-lg font-semibold text-violet-950 dark:text-violet-50">
-          Not a wall of nerd numbers
-        </p>
-        <p className="mt-3 leading-relaxed text-violet-900/95 dark:text-violet-100/90">
-          Big exchanges and trading desks still obsess over spreadsheets. Solpeek is the opposite vibe: strip the noise,
-          amplify the<strong className="mx-1 text-violet-600 dark:text-violet-300"> story beats</strong>
-          wins vs errors, swaps vs NFT touches, busiest programs—all in gradients your PM or legal teammate can skim in
-          ten seconds before someone dives deeper.
+      <div className="grid gap-4 md:grid-cols-3">
+        <section className="rounded-xl border border-slate-200 bg-[var(--surface)] p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/60">
+          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">
+            Program-level view
+          </h2>
+          <p className="mt-2 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
+            See where activity clusters—tokens, swaps, NFT tooling—without drowning in raw transaction IDs.
+          </p>
+        </section>
+        <section className="rounded-xl border border-slate-200 bg-[var(--surface)] p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/60">
+          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">
+            Shareable & bounded
+          </h2>
+          <p className="mt-2 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
+            Every view is anchored on a deterministic URL—a recent-window sample, open source and self-hostable.
+          </p>
+        </section>
+        <section className="rounded-xl border border-slate-200 bg-[var(--surface)] p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950/60">
+          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">
+            Read-only by design
+          </h2>
+          <p className="mt-2 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
+            Ledger reads only. Labels are heuristic clues—not legal or compliance adjudication.
+          </p>
+        </section>
+      </div>
+
+      <section className="rounded-xl border border-slate-200 bg-teal-50/50 p-6 dark:border-teal-900/40 dark:bg-teal-950/25">
+        <h2 className="text-[15px] font-semibold text-teal-950 dark:text-teal-50">
+          Open stack, deterministic depth
+        </h2>
+        <p className="mt-3 max-w-3xl text-[14px] leading-relaxed text-teal-900/85 dark:text-teal-100/85">
+          MIT-licensed UI you can rerun behind IAM and your own RPC. Not a sanctioned-party database or full-history indexer—paired well with tighter internal tooling downstream.
         </p>
       </section>
 
-      <section className="rounded-3xl border border-teal-200/80 bg-gradient-to-r from-emerald-50 to-cyan-50 p-6 text-sm dark:border-teal-900/70 dark:from-emerald-950/40 dark:to-cyan-950/30">
-        <p className="font-semibold text-emerald-900 dark:text-emerald-50">
-          Why institutions still pick it up first
-        </p>
-        <p className="mt-3 leading-relaxed text-emerald-950/85 dark:text-emerald-50/95">
-          You get<strong className="mx-1"> shareable snapshots</strong>
-          anchored on a deterministic URL alongside open MIT code you can rerun behind IAM and your own RPC keys—not a mysterious black-box feed.
-          It is<strong className="mx-1"> not</strong>
-          KYC, sanctioned-party screening, or full history—it is the friendly prelude before heavyweight tooling.
-        </p>
-      </section>
-
-      <section className="rounded-2xl border border-zinc-200 bg-zinc-50/90 p-5 text-sm text-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-100">
-        <p className="font-medium text-zinc-900 dark:text-zinc-50">Private & capped</p>
-        <p className="mt-2 leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Read-only lookups from Solana RPC only—nothing leaves your custody story except public chain facts. Highlights
-          come from recent activity (small cap), never the entire lifetime reel.
-        </p>
-      </section>
-
-      <section className="grid gap-6 rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950 sm:grid-cols-2">
+      <section className="rounded-xl border border-slate-200 bg-[var(--surface)] p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950/60 md:grid md:grid-cols-2 md:gap-8">
         <div>
-          <h2 className="font-semibold text-zinc-900 dark:text-zinc-50">Labels = clues, not court proof</h2>
-          <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-            “Swap-ish” badges are guesses from program fingerprints. When prosecutors get involved you still need audited
-            indexers—we are the colored sticky notes beforehand.
+          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">Heuristic labels</h2>
+          <p className="mt-3 text-[14px] leading-relaxed text-slate-600 dark:text-slate-400">
+            Categories like swap-style touches are fingerprints from observed program IDs. When you need production-grade tagging, plug in audited indexers—we stay intentionally lightweight above the RPC plane.
           </p>
         </div>
-        <div>
-          <h2 className="font-semibold text-zinc-900 dark:text-zinc-50">Built with</h2>
-          <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+        <div className="mt-6 md:mt-0">
+          <h2 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">Built with</h2>
+          <ul className="mt-3 list-inside list-disc space-y-1.5 text-[14px] text-slate-600 dark:text-slate-400">
             <li>Next.js on Vercel</li>
             <li>Wallet adapter + Solana web3 reads</li>
-            <li>Optional Solana Actions tip</li>
+            <li>Optional Solana Actions tip endpoint</li>
           </ul>
         </div>
       </section>

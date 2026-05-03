@@ -27,8 +27,10 @@ import {
 
 function DashboardSkeleton() {
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 px-4 py-16 sm:px-6">
-      <p className="text-sm text-zinc-500">Loading dashboard…</p>
+    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 py-16 sm:px-6">
+      <p className="text-[14px] text-slate-500 dark:text-slate-400">
+        Loading dashboard…
+      </p>
     </main>
   );
 }
@@ -171,120 +173,125 @@ function DashboardInner() {
       !explorerKey;
 
     return (
-      <main className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-4 py-16 sm:px-6">
-        <h1 className="text-2xl font-semibold tracking-tight">Analyze a wallet</h1>
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-4 py-14 sm:px-6 lg:pb-20">
+        <h1 className="text-[1.625rem] font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+          Analyze a wallet
+        </h1>
 
         {paramInvalid && (
-          <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-50">
+          <p className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-[14px] text-amber-950 dark:border-amber-800 dark:bg-amber-950/35 dark:text-amber-50">
             That address isn’t a valid Solana pubkey. Paste a base58 wallet or program ID.
           </p>
         )}
 
-        <p className="text-zinc-600 dark:text-zinc-400">
-          Jump in without connecting—browse a busy mainnet signer, then connect to
-          see your own footprint.
+        <p className="max-w-xl text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+          Open the demo wallet or paste an address. Read-only lookups follow the cluster switch in the header—no custody.
         </p>
 
         <div className="flex flex-wrap gap-3">
           <Link
             href={demoDashboardHref()}
-            className="rounded-full bg-violet-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-700"
+            className="inline-flex items-center justify-center rounded-md bg-teal-600 px-5 py-2.5 text-[14px] font-semibold text-white shadow-sm hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600"
           >
-            Watch live demo wallet
+            Demo wallet
           </Link>
           <Link
             href="/"
-            className="rounded-full border border-zinc-300 px-5 py-2.5 text-sm font-medium hover:bg-white dark:border-zinc-700 dark:hover:bg-zinc-900"
+            className="inline-flex items-center justify-center rounded-md border border-slate-300 bg-[var(--surface)] px-5 py-2.5 text-[14px] font-semibold text-slate-900 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:hover:bg-slate-900"
           >
-            ← Home
+            Home
           </Link>
         </div>
 
         <form
           onSubmit={goPaste}
-          className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950"
+          className="rounded-xl border border-slate-200 bg-[var(--surface)] p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950/60"
         >
-          <label className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
-            Or paste any pubkey
+          <label className="text-[14px] font-semibold text-slate-900 dark:text-slate-50">
+            Paste any pubkey
           </label>
-          <p className="mt-1 text-xs text-zinc-500">
-            Read-only summaries on the cluster shown in the header (
-            <span className="font-mono">{cluster}</span>).
+          <p className="mt-1 text-[13px] text-slate-500 dark:text-slate-400">
+            Cluster:{" "}
+            <span className="font-mono text-slate-700 dark:text-slate-300">{cluster}</span>
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <input
               value={pasteInput}
               onChange={(e) => setPasteInput(e.target.value)}
-              placeholder="Solana Pubkey · base58"
-              className="w-full flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 font-mono text-sm dark:border-zinc-700 dark:bg-zinc-900"
+              placeholder="Solana address (base58)"
+              className="w-full flex-1 rounded-md border border-slate-300 bg-white px-3 py-2.5 font-mono text-[13px] text-slate-900 outline-none ring-teal-500/0 transition focus:border-teal-600 focus:ring-2 focus:ring-teal-600/25 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
             />
             <button
               type="submit"
-              className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white dark:bg-zinc-100 dark:text-zinc-900"
+              className="rounded-md bg-slate-900 px-5 py-2.5 text-[14px] font-semibold text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
             >
-              Load
+              Load address
             </button>
           </div>
         </form>
 
-        <p className="text-sm text-zinc-500">
-          Already connected? Use the wallet button above and open{" "}
-          <Link href="/dashboard" className="text-violet-600 dark:text-violet-400">
+        <p className="text-[13px] text-slate-500 dark:text-slate-400">
+          Connected? Use the wallet control in the header, then open{" "}
+          <Link
+            href="/dashboard"
+            className="font-medium text-teal-700 underline underline-offset-2 hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-300"
+          >
             /dashboard
           </Link>{" "}
-          without an address param.
+          without a query parameter.
         </p>
       </main>
     );
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-4 py-14 sm:px-6 lg:gap-12 lg:py-16">
+    <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-4 pb-20 pt-12 sm:px-6 lg:gap-12 lg:pt-14">
       {explorerMode ? (
-        <div className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-950 dark:border-sky-900/60 dark:bg-sky-950/40 dark:text-sky-50">
-          <span className="font-medium">Live read-only view</span> · inspecting{" "}
-          <span className="font-mono text-xs">{targetKey.toBase58()}</span>
+        <div className="rounded-lg border border-teal-200 bg-teal-50/70 px-4 py-3 text-[13px] text-teal-950 shadow-sm dark:border-teal-900/70 dark:bg-teal-950/30 dark:text-teal-50">
+          <span className="font-semibold">Read-only</span> ·{" "}
+          <span className="font-mono text-[12px] text-teal-900 dark:text-teal-100">
+            {targetKey.toBase58()}
+          </span>
           {connected && publicKey && (
-            <span className="mt-2 block font-normal text-sky-800/90 dark:text-sky-100/85">
-              You’re signed in as {publicKey.toBase58().slice(0, 4)}… — still
-              showing the pasted address above.
+            <span className="mt-2 block font-normal text-teal-900/85 dark:text-teal-100/90">
+              Signed in as {publicKey.toBase58().slice(0, 4)}… · still inspecting pasted address above.
             </span>
           )}
         </div>
       ) : null}
 
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-2">
-          <p className="text-sm uppercase tracking-wide text-violet-600 dark:text-violet-400">
-            Solpeek
+      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-6 dark:border-slate-800">
+        <div className="space-y-3">
+          <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-teal-700 dark:text-teal-400">
+            Dashboard
           </p>
-          <h1 className="text-balance bg-gradient-to-r from-violet-600 via-fuchsia-600 to-sky-500 bg-clip-text text-3xl font-semibold tracking-tight text-transparent sm:text-4xl">
-            {explorerMode ? "Someone else’s Solana vibe check" : "Your Solana story (recent slice)"}
+          <h1 className="max-w-xl text-[1.625rem] font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-[1.875rem] sm:leading-tight">
+            {explorerMode ? "Inspecting pasted address" : "Connected wallet snapshot"}
           </h1>
-          <p className="break-all font-mono text-sm text-zinc-500">
+          <p className="break-all font-mono text-[13px] text-slate-500 dark:text-slate-400">
             {targetKey.toBase58()}
           </p>
-          <div className="flex flex-wrap gap-3 pt-2">
+          <div className="flex flex-wrap gap-2 pt-1">
             <button
               type="button"
               onClick={() => void runInsights()}
               disabled={loading}
-              className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+              className="rounded-md border border-transparent bg-teal-600 px-4 py-2 text-[13px] font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-55 dark:bg-teal-500 dark:hover:bg-teal-600"
             >
-              {loading ? "Refreshing…" : "Refresh"}
+              {loading ? "Refreshing…" : "Refresh data"}
             </button>
             <a
               href="#solpeek-visualization"
-              className="rounded-full border border-violet-300 bg-violet-50 px-4 py-2 text-sm font-medium text-violet-800 hover:bg-violet-100 dark:border-violet-700 dark:bg-violet-950/50 dark:text-violet-200 dark:hover:bg-violet-950"
+              className="rounded-md border border-teal-300 bg-transparent px-4 py-2 text-[13px] font-semibold text-teal-800 hover:bg-teal-50 dark:border-teal-800 dark:text-teal-200 dark:hover:bg-teal-950/60"
             >
-              Jump to charts
+              Jump to visualization
             </a>
             {explorerMode && (
               <Link
                 href="/dashboard"
-                className="rounded-full border border-zinc-300 px-4 py-2 text-sm dark:border-zinc-700"
+                className="rounded-md border border-slate-300 px-4 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-900"
               >
-                Analyze connected wallet instead
+                Use connected wallet
               </Link>
             )}
           </div>
@@ -292,18 +299,17 @@ function DashboardInner() {
       </div>
 
       {error && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-100">
-          <p className="font-medium">Something went wrong</p>
-          <p className="mt-1 opacity-90">{error}</p>
+        <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-[14px] text-amber-950 dark:border-amber-900 dark:bg-amber-950/35 dark:text-amber-50">
+          <p className="font-semibold">Request failed</p>
+          <p className="mt-1 opacity-95">{error}</p>
         </div>
       )}
 
       {loading && !insights && (
-        <p className="text-sm text-zinc-600 dark:text-zinc-300">
+        <p className="text-[14px] text-slate-600 dark:text-slate-400">
           Pulling up to{" "}
-          <strong className="text-violet-600 dark:text-violet-400">{MAX_SIGNATURES}</strong>{" "}
-          recent public moves—colored bars appear below as soon as the first batch decodes (scroll
-          if you’re on a small screen).
+          <strong className="font-semibold text-teal-700 dark:text-teal-400">{MAX_SIGNATURES}</strong>{" "}
+          recent rows—charts mount below immediately and fill as batches decode.
         </p>
       )}
 
@@ -315,30 +321,30 @@ function DashboardInner() {
         <div className="grid gap-8">
           <InsightsPanel insights={insights} streaming={loading} />
 
-          <div className="rounded-3xl border-2 border-dashed border-teal-200 bg-gradient-to-r from-teal-50 to-cyan-50 p-6 dark:border-teal-800 dark:from-teal-950/40 dark:to-cyan-950/30">
-            <h3 className="text-lg font-semibold text-teal-900 dark:text-teal-50">
-              Token geek mode
+          <div className="rounded-xl border border-dashed border-slate-300 bg-[var(--surface)] p-6 shadow-sm dark:border-slate-600 dark:bg-slate-950/50">
+            <h3 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">
+              SPL mint balance
             </h3>
-            <p className="mt-2 text-sm text-teal-800 dark:text-teal-200/85">
-              Drop any SPL mint pubkey to peek how much balance this wallet still holds for that mint on the active network.
+            <p className="mt-2 text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
+              Optional: enter a mint address to read token balance on the selected cluster.
             </p>
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
               <input
-                className="w-full rounded-xl border border-teal-200 bg-white px-3 py-2.5 font-mono text-sm shadow-inner dark:border-teal-900 dark:bg-zinc-950"
-                placeholder="Paste mint address"
+                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-[13px] dark:border-slate-700 dark:bg-slate-950"
+                placeholder="Mint address"
                 value={mintInput}
                 onChange={(e) => setMintInput(e.target.value)}
               />
               <button
                 type="button"
-                className="rounded-xl bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow hover:bg-teal-500 dark:bg-teal-500"
+                className="rounded-md bg-teal-600 px-5 py-2 text-[13px] font-semibold text-white shadow-sm hover:bg-teal-700 dark:bg-teal-500 dark:hover:bg-teal-600"
                 onClick={() => void tryMintSnap()}
               >
-                Peek balance
+                Lookup balance
               </button>
             </div>
             {mintResult && (
-              <p className="mt-4 rounded-xl bg-white/80 px-3 py-2 font-mono text-sm text-teal-950 dark:bg-zinc-900 dark:text-teal-100">
+              <p className="mt-4 rounded-md border border-slate-200 bg-slate-50 px-3 py-2 font-mono text-[13px] text-slate-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
                 {mintResult}
               </p>
             )}

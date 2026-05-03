@@ -12,16 +12,20 @@ export function ClusterToggle() {
   const { cluster, setCluster } = useCluster();
 
   return (
-    <div className="inline-flex rounded-full border border-zinc-200 bg-zinc-100 p-0.5 text-sm dark:border-zinc-700 dark:bg-zinc-900">
+    <div
+      className="inline-flex rounded-md border border-slate-200 bg-slate-100/80 p-0.5 text-[13px] font-medium dark:border-slate-700 dark:bg-slate-900/80"
+      role="group"
+      aria-label="Network"
+    >
       {OPTIONS.map((o) => (
         <button
           key={o.value}
           type="button"
           onClick={() => setCluster(o.value)}
-          className={`rounded-full px-3 py-1 font-medium transition-colors ${
+          className={`rounded px-3 py-1.5 transition-colors ${
             cluster === o.value
-              ? "bg-white text-zinc-900 shadow-sm dark:bg-zinc-800 dark:text-zinc-50"
-              : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+              ? "bg-white text-teal-800 shadow-sm dark:bg-slate-800 dark:text-teal-200"
+              : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
           }`}
         >
           {o.label}

@@ -30,10 +30,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col font-sans">
+      <body className="flex min-h-full flex-col bg-[var(--background)] font-sans text-[var(--foreground)] antialiased">
         <SolanaWalletProvider>
           <Header />
-          <div className="flex flex-1 flex-col">{children}</div>
+          <div className="flex flex-1 flex-col bg-[var(--background)]">{children}</div>
         </SolanaWalletProvider>
       </body>
     </html>
