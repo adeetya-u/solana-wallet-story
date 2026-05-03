@@ -247,14 +247,12 @@ function DashboardInner() {
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-10 px-4 pb-20 pt-12 sm:px-6 lg:gap-12 lg:pt-14">
       {explorerMode ? (
-        <div className="rounded-lg border border-teal-200 bg-teal-50/70 px-4 py-3 text-[13px] text-teal-950 shadow-sm dark:border-teal-900/70 dark:bg-teal-950/30 dark:text-teal-50">
-          <span className="font-semibold">Read-only</span> ·{" "}
-          <span className="font-mono text-[12px] text-teal-900 dark:text-teal-100">
-            {targetKey.toBase58()}
-          </span>
+        <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-[13px] text-slate-800 shadow-sm dark:border-slate-700 dark:bg-slate-900/60 dark:text-slate-100">
+          <span className="font-medium text-slate-600 dark:text-slate-400">Explorer · </span>
+          <span className="font-mono text-[12px]">{targetKey.toBase58()}</span>
           {connected && publicKey && (
-            <span className="mt-2 block font-normal text-teal-900/85 dark:text-teal-100/90">
-              Signed in as {publicKey.toBase58().slice(0, 4)}… · still inspecting pasted address above.
+            <span className="mt-2 block text-slate-600 dark:text-slate-400">
+              Wallet connected; view above reflects pasted address only.
             </span>
           )}
         </div>
@@ -262,11 +260,11 @@ function DashboardInner() {
 
       <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-6 dark:border-slate-800">
         <div className="space-y-3">
-          <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-teal-700 dark:text-teal-400">
-            Dashboard
+          <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-slate-500 dark:text-slate-400">
+            Overview
           </p>
           <h1 className="max-w-xl text-[1.625rem] font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-[1.875rem] sm:leading-tight">
-            {explorerMode ? "Inspecting pasted address" : "Connected wallet snapshot"}
+            {explorerMode ? "External address overview" : "Connected address overview"}
           </h1>
           <p className="break-all font-mono text-[13px] text-slate-500 dark:text-slate-400">
             {targetKey.toBase58()}
@@ -278,20 +276,20 @@ function DashboardInner() {
               disabled={loading}
               className="rounded-md border border-transparent bg-teal-600 px-4 py-2 text-[13px] font-semibold text-white shadow-sm hover:bg-teal-700 disabled:opacity-55 dark:bg-teal-500 dark:hover:bg-teal-600"
             >
-              {loading ? "Refreshing…" : "Refresh data"}
+              {loading ? "Loading…" : "Refresh"}
             </button>
             <a
               href="#solpeek-visualization"
-              className="rounded-md border border-teal-300 bg-transparent px-4 py-2 text-[13px] font-semibold text-teal-800 hover:bg-teal-50 dark:border-teal-800 dark:text-teal-200 dark:hover:bg-teal-950/60"
+              className="rounded-md border border-slate-300 bg-transparent px-4 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-900"
             >
-              Jump to visualization
+              Charts
             </a>
             {explorerMode && (
               <Link
                 href="/dashboard"
                 className="rounded-md border border-slate-300 px-4 py-2 text-[13px] font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-900"
               >
-                Use connected wallet
+                Your wallet
               </Link>
             )}
           </div>
@@ -306,10 +304,8 @@ function DashboardInner() {
       )}
 
       {loading && !insights && (
-        <p className="text-[14px] text-slate-600 dark:text-slate-400">
-          Pulling up to{" "}
-          <strong className="font-semibold text-teal-700 dark:text-teal-400">{MAX_SIGNATURES}</strong>{" "}
-          recent rows—charts mount below immediately and fill as batches decode.
+        <p className="text-[13px] text-slate-600 dark:text-slate-400">
+          Loading up to {MAX_SIGNATURES} signatures. Charts appear below while data streams in.
         </p>
       )}
 

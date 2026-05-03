@@ -24,27 +24,22 @@ export function InsightsPanelSkeleton({
       id="solpeek-visualization"
       className="scroll-mt-24 space-y-6"
       aria-busy="true"
-      aria-label="Loading visualization"
+      aria-label="Loading charts"
     >
       <header className="flex flex-wrap items-end justify-between gap-3 border-b border-slate-200 pb-4 dark:border-slate-700">
         <div>
-          <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-teal-700 dark:text-teal-400">
-            Visualization
+          <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-slate-600 dark:text-slate-400">
+            Summary
           </p>
-          <h2 className="mt-2 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-50">
-            Charts load progressively
-          </h2>
-          <p className="mt-2 max-w-xl text-[14px] text-slate-600 dark:text-slate-400">
+          <h2 className="sr-only">Activity summary charts</h2>
+          <p className="mt-1 max-w-xl text-[13px] text-slate-600 dark:text-slate-400">
             {signatureTargetHint !== null ? (
               <>
-                Targeting{" "}
-                <strong className="text-teal-800 dark:text-teal-300">
-                  {signatureTargetHint}
-                </strong>{" "}
-                recent actions—decoded rows stream into the visuals below.
+                Fetching payloads for{" "}
+                <span className="font-medium tabular-nums">{signatureTargetHint}</span> signatures…
               </>
             ) : (
-              <>Resolving signatures, then fetching transaction payloads…</>
+              <>Resolving signature list…</>
             )}
           </p>
         </div>
@@ -74,37 +69,32 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
   const activityRows = [
     {
       key: "swap",
-      icon: "↔",
-      label: "Trading & swap-style flows",
-      sub: "DEX-style programs (heuristic)",
+      label: "DEX / aggregator",
+      sub: "Heuristic mapping",
       count: insights.buckets.swapLike,
     },
     {
       key: "token",
-      icon: "🪙",
-      label: "Token moves",
-      sub: "SPL token programs",
+      label: "SPL Token",
+      sub: "",
       count: insights.buckets.splTokenLike,
     },
     {
       key: "nft",
-      icon: "🖼",
-      label: "NFT collections & metadata",
-      sub: "Metaplex-related touches",
+      label: "NFT / metadata",
+      sub: "Metaplex family",
       count: insights.buckets.metadataLike,
     },
     {
       key: "vote",
-      icon: "🗳",
-      label: "Network voting",
-      sub: "Validator vote program",
+      label: "Vote program",
+      sub: "",
       count: insights.buckets.voteLike,
     },
     {
       key: "memo",
-      icon: "📝",
-      label: "Memo notes",
-      sub: "On-chain labels",
+      label: "Memo program",
+      sub: "",
       count: insights.buckets.memoLike,
     },
   ];
@@ -122,53 +112,44 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
     <div id="solpeek-visualization" className="scroll-mt-24 grid gap-6">
       <header className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-4 dark:border-slate-700">
         <div>
-          <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-teal-700 dark:text-teal-400">
-            Visualization
+          <p className="text-[13px] font-semibold uppercase tracking-[0.12em] text-slate-600 dark:text-slate-400">
+            Summary
           </p>
-          <h2 className="mt-2 text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-50">
-            Synopsis
-          </h2>
-          <p className="sr-only">
-            Charts and percentages for sampled recent activity
-          </p>
+          <h2 className="sr-only">Recent signature window</h2>
         </div>
         {streaming && (
-          <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-amber-900 dark:border-amber-800 dark:bg-amber-950/50 dark:text-amber-100">
-            Streaming · {insights.fetchedTransactions}/{insights.fetchedSignatures}
+          <div className="rounded border border-slate-300 bg-slate-50 px-2 py-1 text-[11px] font-medium text-slate-700 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300">
+            Partial · {insights.fetchedTransactions}/{insights.fetchedSignatures}
           </div>
         )}
       </header>
 
-      <div className={`${cardWrap} bg-teal-50/40 p-5 dark:bg-teal-950/20`}>
-        <p className="max-w-2xl text-pretty text-[14px] leading-relaxed text-slate-700 dark:text-slate-300">
-          Sample of the&nbsp;
-          <strong className="font-semibold text-teal-800 dark:text-teal-300">
-            newest {insights.fetchedSignatures} public actions
-          </strong>
-          &nbsp;(cap {MAX_SIGNATURES}). Bars show how often each flavor of program appeared in those
-          rows—overlap across categories is normal.
+      <div className={`${cardWrap} border-slate-200 bg-slate-50/90 p-4 dark:border-slate-700 dark:bg-slate-900/40`}>
+        <p className="text-[13px] leading-snug text-slate-700 dark:text-slate-300">
+          Latest <span className="font-medium tabular-nums">{insights.fetchedSignatures}</span> signatures
+          (maximum {MAX_SIGNATURES}). Parsed transactions only; category counts are heuristic and overlap.
         </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
         <GlowStat
-          label="Moves sampled"
+          label="Signatures"
           value={insights.fetchedSignatures}
-          hint="Ledger fingerprints in window"
+          hint=""
           className="border-slate-200 ring-slate-200/70 dark:border-slate-700 dark:ring-slate-700"
-          valueClass="text-teal-700 dark:text-teal-300"
+          valueClass="text-slate-800 dark:text-slate-100"
         />
         <GlowStat
           label="Succeeded"
           value={insights.successfulTransactions}
-          hint="Parsed without error flag"
+          hint=""
           className="border-emerald-200/70 ring-emerald-100 dark:border-emerald-900 dark:ring-emerald-900/50"
           valueClass="text-emerald-700 dark:text-emerald-400"
         />
         <GlowStat
-          label="Ran into trouble"
+          label="Failed"
           value={insights.failedTransactions}
-          hint="Failures in sample"
+          hint=""
           className="border-rose-200/70 ring-rose-100 dark:border-rose-900 dark:ring-rose-900/40"
           valueClass="text-rose-700 dark:text-rose-400"
         />
@@ -177,39 +158,36 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
       <div className="grid gap-4 lg:grid-cols-3">
         <div className={`${cardWrap} p-5 lg:col-span-1`}>
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-            Success mix
+            Outcomes
           </p>
           <p className="mt-3 text-center text-[13px] text-slate-600 dark:text-slate-400">
-            <span className="font-semibold text-emerald-600 dark:text-emerald-400">
-              {insights.successfulTransactions} ok
+            <span className="font-medium text-emerald-600 dark:text-emerald-400">
+              {insights.successfulTransactions} success
             </span>
-            {" · "}
-            <span className="font-semibold text-rose-600 dark:text-rose-400">
-              {insights.failedTransactions} failed
+            <span className="text-slate-400 dark:text-slate-500"> / </span>
+            <span className="font-medium text-rose-600 dark:text-rose-400">
+              {insights.failedTransactions} failure
             </span>
           </p>
           {totalAttempts > 0 ? (
             <SuccessRing pct={okPct} />
           ) : (
             <p className="mt-6 text-center text-[13px] text-slate-500 dark:text-slate-400">
-              No parsed rows yet—ring appears after first decoded move.
+              Pending parsed transactions.
             </p>
           )}
-          <p className="mt-2 text-center font-mono text-2xl font-bold tabular-nums text-teal-700 dark:text-teal-300">
+          <p className="mt-2 text-center font-mono text-2xl font-semibold tabular-nums text-slate-800 dark:text-slate-100">
             {totalAttempts === 0 ? "—" : `${okPct}%`}
           </p>
-          <p className="mt-4 text-[12px] leading-relaxed text-slate-500 dark:text-slate-400">
-            Based on {insights.fetchedTransactions} parsed moves in this pull—not lifetime history.
+          <p className="mt-4 text-[12px] text-slate-500 dark:text-slate-400">
+            {insights.fetchedTransactions} parsed TXs · window only.
           </p>
         </div>
 
         <div className={`${cardWrap} space-y-3 p-5 lg:col-span-2`}>
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-            Activity composition
+            Categories (heuristic)
           </p>
-          <span className="inline-block rounded border border-slate-200 bg-slate-50 px-2 py-1 text-[12px] text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
-            Bar length ∝ touches in snippet
-          </span>
           <ul className="mt-3 space-y-4">
             {activityRows.map((row, idx) => {
               const pct = insights.fetchedTransactions
@@ -220,16 +198,13 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
               return (
                 <li key={row.key}>
                   <div className="flex items-baseline justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-base opacity-90" aria-hidden>
-                        {row.icon}
-                      </span>
-                      <div>
-                        <p className="text-[14px] font-medium text-slate-900 dark:text-slate-100">
-                          {row.label}
-                        </p>
+                    <div className="min-w-0">
+                      <p className="text-[14px] font-medium text-slate-900 dark:text-slate-100">
+                        {row.label}
+                      </p>
+                      {row.sub ? (
                         <p className="text-[12px] text-slate-500 dark:text-slate-400">{row.sub}</p>
-                      </div>
+                      ) : null}
                     </div>
                     <span className="tabular-nums text-[13px] font-semibold text-slate-800 dark:text-slate-100">
                       {row.count}{" "}
@@ -247,27 +222,25 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
             })}
           </ul>
           <p className="pt-2 text-[11px] text-slate-500 dark:text-slate-400">
-            *Touches ÷ parsed moves—categories overlap.
+            *Approximate touches ÷ parsed TXs · non-exclusive.
           </p>
         </div>
       </div>
 
       <div className={`${cardWrap} p-5`}>
         <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
-          Top programs (address → hits)
+          Programs · invocations
         </p>
-        <p className="mt-2 text-[14px] text-slate-600 dark:text-slate-400">
+        <p className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
           <span className="font-medium text-slate-900 dark:text-slate-100">
-            {insights.uniqueProgramsCount} distinct program IDs
+            {insights.uniqueProgramsCount}
           </span>
-          {" "}in sampled rows.
+          {" "}unique program IDs in window.
         </p>
         <ul className="mt-5 space-y-3">
           {insights.topPrograms.length === 0 && (
-            <li className="rounded-lg border border-dashed border-slate-200 px-4 py-6 text-center text-[14px] text-slate-600 dark:border-slate-700 dark:text-slate-400">
-              {streaming
-                ? "Program ranking fills while additional rows decode…"
-                : "No parsed program touches yet."}
+            <li className="rounded-lg border border-dashed border-slate-200 px-4 py-6 text-center text-[13px] text-slate-600 dark:border-slate-700 dark:text-slate-400">
+              {streaming ? "Updating…" : "No programs in parsed set."}
             </li>
           )}
           {insights.topPrograms.map((row, idx) => {
@@ -282,7 +255,7 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
                   >
                     {truncateMid(row.programId, 44)}
                   </span>
-                  <span className="shrink-0 font-semibold text-slate-900 dark:text-slate-100">
+                  <span className="shrink-0 font-semibold tabular-nums text-slate-900 dark:text-slate-100">
                     ×{row.count}
                   </span>
                 </div>
@@ -299,8 +272,8 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
       </div>
 
       <div className={`${cardWrap} border-dashed p-5`}>
-        <p className="text-[14px] font-semibold text-slate-900 dark:text-slate-50">
-          Slot interval (sample depth)
+        <p className="text-[13px] font-semibold text-slate-900 dark:text-slate-50">
+          Slot span (parsed window)
         </p>
         <p className="mt-3 font-mono text-[13px] leading-relaxed text-slate-600 dark:text-slate-400">
           {insights.oldestFetchedSlot ?? "—"} → {insights.newestFetchedSlot ?? "—"}
@@ -347,7 +320,9 @@ function GlowStat({
       <p className={`mt-2 text-[2rem] font-semibold tabular-nums tracking-tight ${valueClass}`}>
         {value}
       </p>
-      <p className="mt-1 text-[12px] text-slate-500 dark:text-slate-400">{hint}</p>
+      {hint ? (
+        <p className="mt-1 text-[12px] text-slate-500 dark:text-slate-400">{hint}</p>
+      ) : null}
     </div>
   );
 }
@@ -358,7 +333,7 @@ function SuccessRing({ pct }: { pct: number }) {
     <div
       className="mx-auto mt-5 flex justify-center"
       role="img"
-      aria-label={`${clipped}% of sampled moves succeeded`}
+      aria-label={`${clipped}% succeeded in parsed sample`}
     >
       <div className="relative size-40">
         <div
