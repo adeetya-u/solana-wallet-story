@@ -13,6 +13,7 @@ import {
 } from "react";
 import { PublicKey } from "@solana/web3.js";
 import { useCluster } from "@/components/wallet/ClusterContext";
+import { InsightsPanel } from "@/components/dashboard/InsightsPanel";
 import { DEMO_WALLET_MAINNET, demoDashboardHref } from "@/lib/solana/demo";
 import { MAX_SIGNATURES } from "@/lib/solana/fetch";
 import {
@@ -241,10 +242,8 @@ function DashboardInner() {
           <p className="text-sm uppercase tracking-wide text-violet-600 dark:text-violet-400">
             Solpeek
           </p>
-          <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-            {explorerMode
-              ? "Public wallet footprint"
-              : "Your recent on-chain activity"}
+          <h1 className="text-balance bg-gradient-to-r from-violet-600 via-fuchsia-600 to-sky-500 bg-clip-text text-3xl font-semibold tracking-tight text-transparent sm:text-4xl">
+            {explorerMode ? "Someone else’s Solana vibe check" : "Your Solana story (recent slice)"}
           </h1>
           <p className="break-all font-mono text-sm text-zinc-500">
             {targetKey.toBase58()}
@@ -278,97 +277,40 @@ function DashboardInner() {
       )}
 
       {loading && (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          Fetching up to {MAX_SIGNATURES} newest signatures via parallel RPC reads (bounded
-          window, no indexer)—usually a few seconds.
+        <p className="text-sm text-zinc-600 dark:text-zinc-300">
+          Gathering up to<strong className="mx-1 text-violet-600 dark:text-violet-400">{MAX_SIGNATURES}</strong>
+          freshest public moves to paint charts—usually a handful of seconds.
         </p>
       )}
 
       {insights && !loading && (
-        <div className="grid gap-6">
-          <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-            {insights.windowLabel}
-          </p>
+        <div className="grid gap-8">
+          <InsightsPanel insights={insights} />
 
-          <div className="grid gap-4 sm:grid-cols-3">
-            <StatCard title="Signatures" value={String(insights.fetchedSignatures)} />
-            <StatCard
-              title="Parsed OK"
-              value={String(insights.successfulTransactions)}
-            />
-            <StatCard title="Failed" value={String(insights.failedTransactions)} />
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                Slot window (parsed txs)
-              </h3>
-              <p className="mt-3 font-mono text-sm text-zinc-600 dark:text-zinc-400">
-                min {insights.oldestFetchedSlot ?? "—"} → max{" "}
-                {insights.newestFetchedSlot ?? "—"}
-              </p>
-              <p className="mt-3 text-xs text-zinc-500">
-                Narrow window covers only fetched transactions—not account inception.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                Behavior hints (tx counts touching)
-              </h3>
-              <ul className="mt-3 space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
-                <li>Swap-like (Jupiter v6 footprint): {insights.buckets.swapLike}</li>
-                <li>SPL Token / Token-2022: {insights.buckets.splTokenLike}</li>
-                <li>Metaplex metadata: {insights.buckets.metadataLike}</li>
-                <li>Vote program: {insights.buckets.voteLike}</li>
-                <li>Memo program: {insights.buckets.memoLike}</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-              Top programs ({insights.uniqueProgramsCount} unique)
+          <div className="rounded-3xl border-2 border-dashed border-teal-200 bg-gradient-to-r from-teal-50 to-cyan-50 p-6 dark:border-teal-800 dark:from-teal-950/40 dark:to-cyan-950/30">
+            <h3 className="text-lg font-semibold text-teal-900 dark:text-teal-50">
+              Token geek mode
             </h3>
-            <ul className="mt-4 space-y-2 font-mono text-xs">
-              {insights.topPrograms.map((row) => (
-                <li
-                  key={row.programId}
-                  className="flex justify-between gap-4 text-zinc-700 dark:text-zinc-300"
-                >
-                  <span className="truncate" title={row.programId}>
-                    {row.programId}
-                  </span>
-                  <span className="shrink-0 text-zinc-500">{row.count}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="rounded-2xl border border-dashed border-zinc-300 p-5 dark:border-zinc-700">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-              SPL mint snapshot
-            </h3>
-            <p className="mt-1 text-xs text-zinc-500">
-              Paste a mint—for the pubkey above on this cluster.
+            <p className="mt-2 text-sm text-teal-800 dark:text-teal-200/85">
+              Drop any SPL mint pubkey to peek how much balance this wallet still holds for that mint on the active network.
             </p>
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
               <input
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm dark:border-zinc-700 dark:bg-zinc-900"
-                placeholder="Mint address"
+                className="w-full rounded-xl border border-teal-200 bg-white px-3 py-2.5 font-mono text-sm shadow-inner dark:border-teal-900 dark:bg-zinc-950"
+                placeholder="Paste mint address"
                 value={mintInput}
                 onChange={(e) => setMintInput(e.target.value)}
               />
               <button
                 type="button"
-                className="rounded-lg bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
+                className="rounded-xl bg-teal-600 px-6 py-2.5 text-sm font-semibold text-white shadow hover:bg-teal-500 dark:bg-teal-500"
                 onClick={() => void tryMintSnap()}
               >
-                Lookup
+                Peek balance
               </button>
             </div>
             {mintResult && (
-              <p className="mt-3 font-mono text-sm text-zinc-700 dark:text-zinc-300">
+              <p className="mt-4 rounded-xl bg-white/80 px-3 py-2 font-mono text-sm text-teal-950 dark:bg-zinc-900 dark:text-teal-100">
                 {mintResult}
               </p>
             )}
@@ -390,13 +332,3 @@ function parseExplorerPubkey(
   }
 }
 
-function StatCard({ title, value }: { title: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-950">
-      <p className="text-xs uppercase tracking-wide text-zinc-500">{title}</p>
-      <p className="mt-2 text-2xl font-semibold tabular-nums text-zinc-900 dark:text-zinc-50">
-        {value}
-      </p>
-    </div>
-  );
-}

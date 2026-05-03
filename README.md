@@ -22,7 +22,7 @@ Inspired in part by Solana Foundation [RFP themes](https://solana.com/developers
 
 Venues with Solana payouts, listings, staking, custody, or institutional onboarding need repeatability: *what did we know at decision time about this pubkey?* This repo slots into that narrative as MIT-licensed scaffolding you host—**same-origin RPC proxy** for secret hygiene + **readable rollup code** auditors can inspect. It is **not** a sanctioned-party database, KYC engine, or full-history indexer; it complements those systems with a lightweight, human-legible prelude you can bolt policy onto.
 
-Teams evaluating integration (Gemini-caliber desks, OTC primes, treasury SaaS, regulated custodians) get a differentiated hook: ship **articulable evidence** derived from bounded public-RPC reads faster than commissioning bespoke chain scrapers—with an honest scope box (recent window cap, heuristic labels—not court-grade attribution).
+Teams evaluating integration (regulated trading venues, OTC primes, treasury SaaS, custodians) get a differentiated hook: ship **articulable visuals** derived from bounded public-RPC reads—with an honest scope box (recent window cap, heuristic labels—not court-grade attribution).
 
 ### Still useful solo
 
@@ -55,9 +55,9 @@ flowchart LR
 
 | Area | What it demonstrates |
 |------|-----------------------|
-| **Instant demo** | Home → “Try live demo” loads a busy mainnet signer with **no wallet connect** |
-| **Explorer mode** | `/dashboard?address=<pubkey>` read-only for any wallet or program-owned account |
-| **Dashboard** | Bounded-window program rollup + heuristic “behavior hints” (explorer-style tx lists deliberately out of scope for speed) |
+| **Instant demo** | Home loads a busy mainnet signer with **no wallet connect** |
+| **Explorer mode** | `/dashboard?address=<pubkey>` read-only link anyone can open |
+| **Dashboard** | **Charts + percentages** summarizing successes vs bumps, themed activity lanes, busiest programs—recent window only (plain-language copy) |
 | **Mainnet RPC proxy** | Browser → `/api/solana-rpc` → `SOLANA_RPC_URL` (avoids public-RPC **403**) |
 | **Cluster toggle** | `mainnet-beta` vs `devnet`, persisted locally |
 | **Optional mint lookup** | `getParsedTokenAccountsByOwner` for a pasted mint pubkey |
