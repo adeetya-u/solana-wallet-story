@@ -6,6 +6,9 @@ import {
   FileText,
   ImageIcon,
   Minus,
+  Sparkles,
+  Network,
+  Braces,
   Vote,
   type LucideIcon,
 } from "lucide-react";
@@ -241,6 +244,50 @@ export function InsightsPanel({
             </li>
           ) : null}
         </ul>
+
+        <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-800">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+            Model
+          </p>
+          <div className="mt-3 grid gap-2 sm:grid-cols-4">
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3">
+              <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-900 dark:text-slate-100">
+                <Network className="size-4 text-[var(--accent)]" aria-hidden />
+                Chain reads
+              </div>
+              <p className="mt-1 text-[12px] text-slate-600 dark:text-slate-400">
+                Recent signatures and parsed transactions.
+              </p>
+            </div>
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3">
+              <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-900 dark:text-slate-100">
+                <Braces className="size-4 text-[var(--accent)]" aria-hidden />
+                Features
+              </div>
+              <p className="mt-1 text-[12px] text-slate-600 dark:text-slate-400">
+                Rates and counts from the window.
+              </p>
+            </div>
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3">
+              <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-900 dark:text-slate-100">
+                <Sparkles className="size-4 text-[var(--accent)]" aria-hidden />
+                Clusters
+              </div>
+              <p className="mt-1 text-[12px] text-slate-600 dark:text-slate-400">
+                Closest cluster gives a similarity hint.
+              </p>
+            </div>
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3">
+              <div className="flex items-center gap-2 text-[12px] font-semibold text-slate-900 dark:text-slate-100">
+                <ArrowRightLeft className="size-4 text-[var(--accent)]" aria-hidden />
+                Fingerprint
+              </div>
+              <p className="mt-1 text-[12px] text-slate-600 dark:text-slate-400">
+                Short tags plus what changed on this device.
+              </p>
+            </div>
+          </div>
+        </div>
 
         <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-800">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">

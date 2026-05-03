@@ -50,17 +50,23 @@ function DashboardInner() {
   const explorerKey = useMemo(() => parseExplorerPubkey(addressParamRaw), [
     addressParamRaw,
   ]);
-  const isDemoAddress = addressParamRaw === DEMO_WALLET_MAINNET;
+  const isDemoAddress = useMemo(() => {
+    if (!addressParamRaw) return false;
+    return DEMO_WALLETS.some((d) => d.address === addressParamRaw);
+  }, [addressParamRaw]);
 
   const { cluster, setCluster } = useCluster();
   const { connection } = useConnection();
   const { publicKey, connected } = useWallet();
 
   useEffect(() => {
-    if (isDemoAddress && cluster !== "mainnet-beta") {
-      queueMicrotask(() => setCluster("mainnet-beta"));
+    if (!isDemoAddress) return;
+    const demo = DEMO_WALLETS.find((d) => d.address === addressParamRaw);
+    const desired = demo?.cluster ?? "mainnet-beta";
+    if (cluster !== desired) {
+      queueMicrotask(() => setCluster(desired));
     }
-  }, [isDemoAddress, cluster, setCluster]);
+  }, [isDemoAddress, addressParamRaw, cluster, setCluster]);
 
   const targetKey =
     explorerKey ?? (!connected ? null : (publicKey ?? null));
@@ -300,6 +306,27 @@ function DashboardInner() {
             )}
           </div>
         </div>
+
+        {isDemoAddress ? (
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {DEMO_WALLETS.map((d) => {
+              const active = d.address === addressParamRaw;
+              return (
+                <Link
+                  key={d.id}
+                  href={demoDashboardHref(d.id)}
+                  className={
+                    active
+                      ? "rounded-full bg-slate-900 px-4 py-2 text-[12px] font-semibold text-white dark:bg-slate-100 dark:text-slate-900"
+                      : "rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-[12px] font-semibold text-[var(--foreground)] hover:bg-[var(--accent-muted)] dark:hover:bg-neutral-900"
+                  }
+                >
+                  {d.label}
+                </Link>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
 
       {error && (

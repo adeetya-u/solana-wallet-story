@@ -44,6 +44,9 @@ export default function Home() {
         <p className="max-w-lg text-[17px] leading-relaxed text-[var(--muted)]">
           Instead of scrolling a block explorer, get a short, consistent snapshot you can read in seconds.
         </p>
+        <p className="max-w-lg text-[13px] leading-relaxed text-[var(--muted)]">
+          The Fingerprint uses a tiny clustering model trained on a set of common addresses to give a quick point of comparison.
+        </p>
       </div>
 
       <div className="flex flex-wrap gap-3">
@@ -66,7 +69,7 @@ export default function Home() {
           Demo addresses
         </p>
         <p className="mt-1 text-[13px] text-[var(--muted)]">
-          Click to open a labeled example.
+          Pick one to preview the dashboard.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           {DEMO_WALLETS.map((d) => (
@@ -80,7 +83,7 @@ export default function Home() {
           ))}
         </div>
         <p className="mt-3 text-[12px] text-[var(--muted)]">
-          Labels are best-effort. On-chain activity changes over time.
+          Activity can change over time.
         </p>
       </section>
 
