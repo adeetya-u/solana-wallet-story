@@ -68,6 +68,7 @@ function DashboardInner() {
   const [insights, setInsights] = useState<WalletInsights | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [complete, setComplete] = useState(false);
   const [signaturePreviewCount, setSignaturePreviewCount] = useState<number | null>(
     null,
   );
@@ -85,6 +86,7 @@ function DashboardInner() {
     setLoading(true);
     setError(null);
     setInsights(null);
+    setComplete(false);
     setSignaturePreviewCount(null);
     try {
       await loadWalletInsightsProgressive(connection, targetKey, {
@@ -92,10 +94,11 @@ function DashboardInner() {
           if (insightsGenerationRef.current !== generation) return;
           setSignaturePreviewCount(count);
         },
-        onUpdate: (data, _complete) => {
+        onUpdate: (data, isComplete) => {
           if (insightsGenerationRef.current !== generation) return;
           setInsights(data);
           setError(null);
+          setComplete(isComplete);
         },
         shouldAbort: () => insightsGenerationRef.current !== generation,
       });
@@ -315,7 +318,13 @@ function DashboardInner() {
 
       {insights && (
         <div className="grid gap-8">
-          <InsightsPanel insights={insights} streaming={loading} />
+          <InsightsPanel
+            insights={insights}
+            streaming={loading}
+            address={targetKey.toBase58()}
+            cluster={cluster}
+            complete={complete}
+          />
 
           <div className="rounded-xl border border-dashed border-slate-300 bg-[var(--surface)] p-6 shadow-sm dark:border-slate-600 dark:bg-slate-950/50">
             <h3 className="text-[15px] font-semibold text-slate-900 dark:text-slate-50">

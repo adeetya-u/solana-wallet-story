@@ -1,13 +1,23 @@
 import {
   ArrowRightLeft,
+  ArrowDownRight,
+  ArrowUpRight,
   Coins,
   FileText,
   ImageIcon,
+  Minus,
   Vote,
   type LucideIcon,
 } from "lucide-react";
+import { useEffect, useMemo } from "react";
 import type { WalletInsights } from "@/lib/solana/insights";
 import { MAX_SIGNATURES } from "@/lib/solana/fetch";
+import { buildBehaviorFingerprint } from "@/lib/fingerprint/behavior";
+import {
+  computeWhatChanged,
+  loadSnapshot,
+  saveSnapshot,
+} from "@/lib/fingerprint/snapshot";
 
 const BAR_PALETTE = [
   "bg-gradient-to-r from-emerald-600 to-green-400",
@@ -20,6 +30,9 @@ const BAR_PALETTE = [
 type Props = {
   insights: WalletInsights;
   streaming?: boolean;
+  address?: string;
+  cluster?: string;
+  complete?: boolean;
 };
 
 export function InsightsPanelSkeleton({
@@ -66,13 +79,40 @@ export function InsightsPanelSkeleton({
   );
 }
 
-export function InsightsPanel({ insights, streaming = false }: Props) {
+export function InsightsPanel({
+  insights,
+  streaming = false,
+  address,
+  cluster,
+  complete = true,
+}: Props) {
   const totalAttempts =
     insights.successfulTransactions + insights.failedTransactions;
   const okPct =
     totalAttempts === 0
       ? 0
       : Math.round((100 * insights.successfulTransactions) / totalAttempts);
+
+  const fingerprint = useMemo(
+    () => buildBehaviorFingerprint(insights),
+    [insights],
+  );
+
+  const previous = useMemo(() => {
+    if (!address || !cluster) return null;
+    return loadSnapshot(address, cluster);
+  }, [address, cluster]);
+
+  const whatChanged = useMemo(() => {
+    if (!previous) return [];
+    return computeWhatChanged(previous, insights);
+  }, [previous, insights]);
+
+  useEffect(() => {
+    if (!address || !cluster) return;
+    if (!complete) return;
+    saveSnapshot(address, cluster, insights);
+  }, [address, cluster, complete, insights]);
 
   const activityRows: {
     key: string;
@@ -142,6 +182,82 @@ export function InsightsPanel({ insights, streaming = false }: Props) {
           </div>
         )}
       </header>
+
+      <div className={`${cardWrap} p-5`}>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+          Fingerprint
+        </p>
+        <p className="mt-2 text-[15px] font-semibold tracking-tight text-slate-900 dark:text-slate-50">
+          {fingerprint.headline}
+        </p>
+        <p className="mt-1 text-[13px] text-slate-600 dark:text-slate-400">
+          {fingerprint.details}
+        </p>
+        <ul className="mt-4 space-y-2">
+          {fingerprint.tags.slice(0, 3).map((t) => (
+            <li key={t.id} className="flex gap-3">
+              <span className="mt-0.5 inline-flex size-6 shrink-0 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--accent-muted)] text-[var(--accent)] dark:bg-neutral-900 dark:text-emerald-300">
+                <span className="text-[11px] font-semibold tabular-nums">
+                  {Math.round(t.score * 10)}/10
+                </span>
+              </span>
+              <div className="min-w-0">
+                <p className="text-[13px] font-semibold text-slate-900 dark:text-slate-100">
+                  {t.label}
+                </p>
+                <p className="text-[12px] leading-relaxed text-slate-600 dark:text-slate-400">
+                  {t.reason}
+                </p>
+              </div>
+            </li>
+          ))}
+          {fingerprint.tags.length === 0 ? (
+            <li className="text-[13px] text-slate-600 dark:text-slate-400">
+              Not enough signal in the parsed window yet.
+            </li>
+          ) : null}
+        </ul>
+
+        <div className="mt-5 border-t border-slate-200 pt-4 dark:border-slate-800">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-slate-400">
+            What changed
+          </p>
+          {!previous ? (
+            <p className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
+              No prior snapshot on this device for this address and cluster.
+            </p>
+          ) : whatChanged.length === 0 ? (
+            <p className="mt-2 text-[13px] text-slate-600 dark:text-slate-400">
+              No material changes detected in the summary signals.
+            </p>
+          ) : (
+            <ul className="mt-3 space-y-2">
+              {whatChanged.map((l, idx) => {
+                const Icon =
+                  l.kind === "up"
+                    ? ArrowUpRight
+                    : l.kind === "down"
+                      ? ArrowDownRight
+                      : Minus;
+                const tint =
+                  l.kind === "up"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : l.kind === "down"
+                      ? "text-rose-600 dark:text-rose-400"
+                      : "text-slate-500 dark:text-slate-400";
+                return (
+                  <li key={idx} className="flex gap-2">
+                    <Icon className={`mt-[2px] size-4 shrink-0 ${tint}`} aria-hidden />
+                    <span className="text-[13px] text-slate-700 dark:text-slate-300">
+                      {l.text}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      </div>
 
       <div className={`${cardWrap} border-slate-200 bg-slate-50/90 p-4 dark:border-slate-700 dark:bg-slate-900/40`}>
         <p className="text-[13px] leading-snug text-slate-700 dark:text-slate-300">

@@ -14,19 +14,13 @@ Inspired in part by Solana Foundation [RFP themes](https://solana.com/developers
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Why this exists (business angle, not “yet another RPC passthrough”)
+## Why this exists
 
-**Scrapers** mirror blobs of chain state; **explorers** optimize for infinite transaction scroll. Neither produces a crisp *artifact* you can attach to underwriting, OTC, custody escalation, or product UX. Solpeek is deliberately a **bounded program-footprint synopsis**: dominant programs touched, heuristic lane tags (DEX-like, SPL, voting, memo, NFT metadata footprints), success vs failure in a sample, exported as **deterministic deep links** (`/dashboard?address=…`) your ops stack can cite.
+Explorers are great for paging through endless transactions. Solpeek does the inverse: pull a capped slice of recent activity for one address and show simple charts plus shareable links (`/dashboard?address=…`) so coworkers agree on what the screen showed.
 
-### Incorporation story (illustrative: exchange-grade desks)
+Licensed under MIT; copy the repo into your infra, tuck it behind the sign-in gates you already use, and plug in whichever Solana HTTP endpoints make sense internally. Expect a polite first screen on public-chain data using pattern-based labels; do not mistake it for a watchlist checker, regulated identity onboarding, or a full archival search backend.
 
-Venues with Solana payouts, listings, staking, custody, or institutional onboarding need repeatability: *what did we know at decision time about this pubkey?* This repo slots into that narrative as MIT-licensed scaffolding you host: **same-origin RPC proxy** for secret hygiene and **readable rollup code** auditors can inspect. It is **not** a sanctioned-party database, KYC engine, or full-history indexer; it complements those systems with a lightweight, human-legible prelude you can bolt policy onto.
-
-Teams evaluating integration (regulated trading venues, OTC primes, treasury SaaS, custodians) get a differentiated hook: ship **articulable visuals** derived from bounded public-RPC reads with an honest scope box (recent window cap, heuristic labels; not court-grade attribution).
-
-### Still useful solo
-
-Traders/devs inherit the same surface for quick counterpart skims, without SSO and policy layers bolted on.
+Trading and treasury tooling can tuck it ahead of fuller reviews; individual wallet users keep the stripped-down snapshot UI without layering enterprise SSO.
 
 ## Architecture
 

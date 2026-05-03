@@ -42,8 +42,8 @@ export default function Home() {
           Read-only Solana address summaries.
         </h1>
         <p className="max-w-lg text-[17px] leading-relaxed text-[var(--muted)]">
-          Paste a public key or open a bounded dashboard link. Charts and program rollups stay
-          on-chain-visible only; no seed phrase handling.
+          Paste a public wallet address or open a preset dashboard link. You only fetch public chain
+          data here; Solpeek never asks for a seed phrase.
         </p>
       </div>
 
@@ -66,17 +66,17 @@ export default function Home() {
         <FeatureCard
           icon={BarChart3}
           title="Program rollups"
-          body="Grouped exposure to SPL, NFT metadata, routers, voting, and memo programs over a capped signature window."
+          body="Adds up recent touches to common Solana programs (tokens, NFT metadata, swap-like routes, votes, memo) over a fixed slice of signatures."
         />
         <FeatureCard
           icon={Link2}
           title="Shareable URLs"
-          body="`/dashboard?address=` links resolve to the same deterministic read model, suited to ticketing or desks."
+          body="`/dashboard?address=` gives everyone with the link the same read-only snapshot, handy for desks or ticketing."
         />
         <FeatureCard
           icon={ShieldCheck}
           title="Custody-neutral"
-          body="Runs as read-only RPC + UI. Labels are heuristic; pair with compliance stacks where obligations exist."
+          body="Reads the chain only through public RPC paths. Categories are guesses; use proper tools wherever you owe compliance or proof."
         />
       </div>
 
@@ -84,9 +84,9 @@ export default function Home() {
         <div className="flex items-start gap-3">
           <Cpu className="mt-0.5 size-5 shrink-0 text-[var(--accent)]" strokeWidth={2} aria-hidden />
           <div>
-            <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Self-hosted option</h2>
+            <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Run it yourself</h2>
             <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[var(--muted)]">
-              Open MIT codebase: deploy behind your gateway, IAM, and chosen RPC URLs. Intended as a prelude screen, not sanctioned-party screening or indexer replacement.
+              Source is open under the MIT license. Host it wherever you prefer, tighten logins and routing the way your team already does, and plug in the Solana providers you trust. Think of it as one quick briefing page before heavier checks, not watchlist screening or a full searchable history.
             </p>
           </div>
         </div>
@@ -94,17 +94,17 @@ export default function Home() {
 
       <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-7 md:grid md:grid-cols-2 md:gap-10">
         <div>
-          <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Heuristic tagging</h2>
+          <h2 className="text-[15px] font-semibold text-[var(--foreground)]">About the labels</h2>
           <p className="mt-3 text-[14px] leading-relaxed text-[var(--muted)]">
-            Classification uses program-ID patterns. Substitute audited indexers wherever production attestations matter.
+            Tags come from spotting known program IDs in the payloads we pull. Where you need audited records or airtight categories, swap in tooling built for that job.
           </p>
         </div>
         <div className="mt-8 md:mt-0">
           <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Stack</h2>
           <ul className="mt-3 list-inside list-disc space-y-1.5 text-[14px] text-[var(--muted)]">
             <li>Next.js on Vercel</li>
-            <li>Wallet adapter + JSON-RPC relay</li>
-            <li>Optional Solana Actions</li>
+            <li>Standard wallet connect; chain calls can go through your server</li>
+            <li>Optional Solana Actions (tips and similar)</li>
           </ul>
         </div>
       </section>
