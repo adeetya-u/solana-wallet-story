@@ -42,8 +42,7 @@ export default function Home() {
           Read-only Solana address summaries.
         </h1>
         <p className="max-w-lg text-[17px] leading-relaxed text-[var(--muted)]">
-          Paste a public wallet address or open a preset dashboard link. You only fetch public chain
-          data here; Solpeek never asks for a seed phrase.
+          Paste an address. Get a quick summary of recent on-chain activity.
         </p>
       </div>
 
@@ -66,17 +65,17 @@ export default function Home() {
         <FeatureCard
           icon={BarChart3}
           title="Program rollups"
-          body="Adds up recent touches to common Solana programs (tokens, NFT metadata, swap-like routes, votes, memo) over a fixed slice of signatures."
+          body="A quick breakdown of what this address touched recently."
         />
         <FeatureCard
           icon={Link2}
           title="Shareable URLs"
-          body="`/dashboard?address=` gives everyone with the link the same read-only snapshot, handy for desks or ticketing."
+          body="Open the same view later with a link."
         />
         <FeatureCard
           icon={ShieldCheck}
           title="Custody-neutral"
-          body="Reads the chain only through public RPC paths. Categories are guesses; use proper tools wherever you owe compliance or proof."
+          body="Read-only. No seed phrase. No custody."
         />
       </div>
 
@@ -86,26 +85,9 @@ export default function Home() {
           <div>
             <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Run it yourself</h2>
             <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-[var(--muted)]">
-              Source is open under the MIT license. Host it wherever you prefer, tighten logins and routing the way your team already does, and plug in the Solana providers you trust. Think of it as one quick briefing page before heavier checks, not watchlist screening or a full searchable history.
+              MIT licensed. Host it and point it at your RPC.
             </p>
           </div>
-        </div>
-      </section>
-
-      <section className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-6 py-7 md:grid md:grid-cols-2 md:gap-10">
-        <div>
-          <h2 className="text-[15px] font-semibold text-[var(--foreground)]">About the labels</h2>
-          <p className="mt-3 text-[14px] leading-relaxed text-[var(--muted)]">
-            Tags come from spotting known program IDs in the payloads we pull. Where you need audited records or airtight categories, swap in tooling built for that job.
-          </p>
-        </div>
-        <div className="mt-8 md:mt-0">
-          <h2 className="text-[15px] font-semibold text-[var(--foreground)]">Stack</h2>
-          <ul className="mt-3 list-inside list-disc space-y-1.5 text-[14px] text-[var(--muted)]">
-            <li>Next.js on Vercel</li>
-            <li>Standard wallet connect; chain calls can go through your server</li>
-            <li>Optional Solana Actions (tips and similar)</li>
-          </ul>
         </div>
       </section>
     </main>
